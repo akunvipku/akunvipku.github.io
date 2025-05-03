@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Tidak Ditemukan | AkunVIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Netflix+Sans:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Netflix Sans', sans-serif;
+            background-color: #141414;
+            color: white;
+            overflow: hidden;
+        }
+
+        .akunvip-logo {
+            color: #e50914;
+            font-weight: bold;
+            font-size: 2rem;
+            letter-spacing: 1px;
+        }
+
+        .glitch {
+            position: relative;
+            animation: glitch-effect 3s infinite;
+        }
+
+        @keyframes glitch-effect {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 3px);
+            }
+
+            40% {
+                transform: translate(-3px, -3px);
+            }
+
+            60% {
+                transform: translate(3px, 3px);
+            }
+
+            80% {
+                transform: translate(3px, -3px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .tv-static {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(rgba(18, 16, 16, 0.1) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .search-bar:focus {
+            box-shadow: 0 0 0 2px white;
+        }
+
+        .flicker {
+            animation: flicker 2s infinite alternate;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            19%,
+            21%,
+            23%,
+            25%,
+            54%,
+            56%,
+            100% {
+                opacity: 1;
+            }
+
+            20%,
+            22%,
+            24%,
+            55% {
+                opacity: 0.5;
+            }
+        }
+
+        .movie-card {
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%);
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <!-- TV Static Effect -->
+    <div class="tv-static"></div>
+
+    <!-- Navigation -->
+    <nav class="px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <div class="akunvip-logo">AKUN<span class="text-white">VIP</span></div>
+        </div>
+
+
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex flex-col items-center justify-center px-4 text-center relative z-10">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="glitch text-8xl font-bold mb-6 text-red-600 flicker">404</h1>
+            <p class="text-xl text-gray-300 mb-8">Halaman yang Anda cari tidak ditemukan. Mungkin sudah dihapus atau
+                Anda salah mengetik URL.</p>
+
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="https://www.akun.vip/"
+                    class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded font-bold text-lg transition flex items-center justify-center">
+                    <i class="fas fa-home mr-2"></i> Kembali ke Beranda
+                </a>
+
+            </div>
+
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+
+
+    <script>
+        // Add some random glitch effects to the 404 text
+        const glitch = document.querySelector('.glitch');
+
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                glitch.style.animation = 'none';
+                setTimeout(() => {
+                    glitch.style.animation = 'glitch-effect 3s infinite';
+                }, 100);
+            }
+        }, 3000);
+
+        // Simulate TV static effect
+        const tvStatic = document.querySelector('.tv-static');
+
+        setInterval(() => {
+            tvStatic.style.backgroundSize = `${Math.random() * 100 + 50}% ${Math.random() * 10 + 2}px, ${Math.random() * 5 + 2}px 100%`;
+        }, 100);
+
+        // Add hover effect to movie cards
+        const movieCards = document.querySelectorAll('.movie-card');
+        movieCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('transform', 'scale-105', 'shadow-lg');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('transform', 'scale-105', 'shadow-lg');
+            });
+        });
+
+        // Mobile menu toggle (would need additional HTML/JS for full functionality)
+    </script>
+</body>
+
+</html>
