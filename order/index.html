@@ -1,0 +1,16 @@
+<script>
+
+    // Ambil URL saat ini
+    const currentUrl = new URL(window.location.href);
+
+    // Periksa apakah ada parameter 'o' di URL
+    const orderId = currentUrl.searchParams.get("o");
+
+    if (orderId) {
+        // Buat URL redirect dengan parameter 'o' yang diambil
+        const redirectUrl = `https://id.shp.ee/open/noti_email?redir=https://seller.shopee.co.id/universal-link/portal/sale/order/${orderId}?utm_content=A4rBZYAE8sEZ3Db9Av3KZo62aCsny8Du1&utm_medium=email&utm_source=noti`;
+
+        // Lakukan redirect
+        window.location.href = redirectUrl;
+    }
+</script>
