@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aturan Penggunaan Netflix | Akun VIP</title>
+    <meta name="description" content="Panduan dan aturan penggunaan akun Netflix untuk kenyamanan bersama.">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #D1E9F6;
+            /* Light Blue from image */
+            --primary-blue: #10375C;
+            /* Dark Blue from image text */
+            --accent-blue: #4C8CBF;
+            /* Secondary Blue */
+            --text-primary: #10375C;
+            --text-secondary: #4A6276;
+            --card-bg: #FFFFFF;
+            --card-border: rgba(16, 55, 92, 0.1);
+            --rule-icon-bg: #4C8CBF;
+            --warning-bg: #FFEBEB;
+            --warning-border: #FF8080;
+            --warning-text: #B03030;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(circle at 50% -20%, #E3F2FD, transparent 70%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-blue);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .rules-grid {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(16, 55, 92, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(16, 55, 92, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(76, 140, 191, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .rule-number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: var(--accent-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .rule-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .rule-text strong {
+            color: var(--primary-blue);
+        }
+
+        /* Help Section Theme Sync */
+        .help-section {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            border: 2px dashed var(--accent-blue);
+        }
+
+        .step-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: rgba(76, 140, 191, 0.05);
+            border-radius: 12px;
+        }
+
+        .step-item i {
+            color: var(--accent-blue);
+            margin-top: 4px;
+        }
+
+        .warning-box {
+            background: var(--warning-bg);
+            border: 2px solid var(--warning-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 8px 20px rgba(176, 48, 48, 0.05);
+        }
+
+        .warning-box i {
+            font-size: 1.8rem;
+            color: var(--warning-text);
+        }
+
+        .warning-text {
+            font-size: 0.95rem;
+            color: var(--warning-text);
+            font-weight: 600;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-5 {
+            animation-delay: 0.5s;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">Syarat & Ketentuan</div>
+            <p class="subtitle">Mohon baca dan patuhi aturan demi kenyamanan bersama.</p>
+        </header>
+
+        <div class="rules-grid">
+            <!-- Main Rules -->
+            <div class="card">
+
+
+                <div class="rule-item delay-1">
+                    <div class="rule-number">1</div>
+                    <div class="rule-text">Hanya boleh login maksimal <strong>2 perangkat</strong>. Dilarang
+                        berpindah ke perangkat lain selain dua perangkat yang di loginkan
+                        di awal.</div>
+                </div>
+
+                <div class="rule-item delay-2">
+                    <div class="rule-number">2</div>
+                    <div class="rule-text">Hanya boleh login di <strong> 1 TV</strong> dan tidak
+                        boleh berpindah ke TV lain.</div>
+                </div>
+
+                <div class="rule-item delay-3">
+                    <div class="rule-number">3</div>
+                    <div class="rule-text">Dilarang melakukan streaming secara <strong>bersamaan</strong> (wajib
+                        bergantian).</div>
+                </div>
+
+                <div
+                    style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(16, 55, 92, 0.1); display: flex; gap: 12px; align-items: flex-start;">
+                    <i class="fas fa-info-circle" style="color: var(--accent-blue); margin-top: 4px;"></i>
+                    <div class="rule-text" style="font-size: 0.9rem; font-style: italic;">
+                        <strong></strong> Jika terdapat kendala <strong>batasan layar</strong> atau riwayat
+                        tontonan asing, segera hubungi admin.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Help -->
+            <div class="card help-section">
+
+                <p class="rule-text" style="color: var(--primary-blue); font-weight: 600; margin-bottom: 10px;">
+                    Jika kata sandi terdeteksi salah saat pertama kali login (kemungkinan IP WiFi dibatasi), ikuti
+                    solusi berikut:
+                </p>
+
+                <div class="step-list">
+                    <div class="step-item delay-5">
+                        <i class="fas fa-plane"></i>
+                        <div class="rule-text">Hidupkan lalu matikan <strong>Mode Pesawat</strong> ponselmu untuk
+                            me-refresh alamat IP.</div>
+                    </div>
+                    <div class="step-item delay-5">
+                        <i class="fas fa-signal"></i>
+                        <div class="rule-text">Gunakan <strong>Paket Data</strong> (bukan WiFi) untuk proses login awal
+                            di ponsel.</div>
+                    </div>
+                    <div class="step-item delay-5">
+                        <i class="fas fa-wifi"></i>
+                        <div class="rule-text">Untuk perangkat TV, gunakan <strong>Hotspot/Tethering</strong> dari
+                            ponsel saat login pertama.</div>
+                    </div>
+                </div>
+                <p class="rule-text" style="margin-top: 10px; font-size: 0.85rem; font-style: italic;">
+                    *Setelah berhasil masuk, perangkat dapat kembali beralih ke koneksi WiFi.
+                </p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="warning-text">
+                PELANGGARAN KETENTUAN: Akses akun akan dicabut secara permanen dan akun Shopee Anda akan kami Blacklist
+                dari seluruh layanan kami jika terdeteksi melanggar.
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Sirhuka Store</p>
+        </footer>
+    </div>
+
+</body>
+
+</html>
