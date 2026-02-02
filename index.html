@@ -449,8 +449,12 @@
             max-height: 90%;
             border-radius: 12px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
+            transition: none;
+            /* Instant zoom response */
+            touch-action: none;
+            /* Prevent page scroll during pinch */
+            user-select: none;
+            -webkit-user-drag: none;
         }
 
         .modal.active {
@@ -458,7 +462,7 @@
         }
 
         .modal.active .modal-content {
-            transform: scale(1);
+            /* Initial scale handled by JS */
         }
 
         .testi-card img {
@@ -576,7 +580,7 @@
         <section id="testimoni" style="padding: 100px 0;">
             <div class="section-header" style="text-align: center; margin-bottom: 60px;">
                 <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 16px;">Apa Kata <span>Mereka?</span></h2>
-                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Ratusan
+                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Puluhan ribu
                     pelanggan telah menikmati layanan Netflix premium dari AkunVIP. Berikut bukti kepuasan mereka.</p>
             </div>
 
@@ -606,8 +610,8 @@
 
             <div style="text-align: center; margin-top: 40px;">
                 <a href="https://s.shopee.co.id/10lxSFyaRP" target="_blank"
-                    style="color: var(--primary); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1.1rem;">
-                    Lihat selengkapnya di Shopee <i class="fas fa-external-link-alt"></i>
+                    style="color: var(--primary); font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1.2rem;">
+                    lihat selengkapnya di shopee <i class="fas fa-external-link-alt"></i>
                 </a>
             </div>
 
