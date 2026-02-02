@@ -664,20 +664,93 @@
     </div>
 
     <script>
+        let scale = 1;
+        let lastScale = 1;
+        let startDist = 0;
+        let posX = 0;
+        let posY = 0;
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+
+        const modal = document.getElementById('imageModal');
+        const fullImg = document.getElementById('imgFull');
+
+        fullImg.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                startDist = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX,
+                    e.touches[0].pageY - e.touches[1].pageY
+                );
+            } else if (e.touches.length === 1 && scale > 1) {
+                isDragging = true;
+                startX = e.touches[0].pageX - posX;
+                startY = e.touches[0].pageY - posY;
+            }
+        });
+
+        fullImg.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2 && startDist > 0) {
+                e.preventDefault();
+                const currentDist = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX,
+                    e.touches[0].pageY - e.touches[1].pageY
+                );
+                scale = Math.min(Math.max(1, lastScale * (currentDist / startDist)), 4);
+                updateTransform();
+            } else if (e.touches.length === 1 && isDragging) {
+                e.preventDefault();
+                posX = e.touches[0].pageX - startX;
+                posY = e.touches[0].pageY - startY;
+                updateTransform();
+            }
+        });
+
+        fullImg.addEventListener('touchend', (e) => {
+            if (e.touches.length < 2) {
+                lastScale = scale;
+                startDist = 0;
+            }
+            if (e.touches.length === 0) {
+                isDragging = false;
+            }
+        });
+
+        // Prevention for body scroll when zooming/panning
+        fullImg.addEventListener('wheel', (e) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? 0.9 : 1.1;
+                scale = Math.min(Math.max(1, scale * delta), 4);
+                updateTransform();
+            }
+        }, { passive: false });
+
+        function updateTransform() {
+            fullImg.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
+        }
+
         function openModal(card) {
-            const modal = document.getElementById('imageModal');
-            const fullImg = document.getElementById('imgFull');
             const clickedImg = card.querySelector('img');
             fullImg.src = clickedImg.src;
             modal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Stop scroll
+            document.body.style.overflow = 'hidden';
+
+            // Reset state
+            scale = 1;
+            lastScale = 1;
+            posX = 0;
+            posY = 0;
+            updateTransform();
         }
 
         function closeModal() {
-            const modal = document.getElementById('imageModal');
             modal.classList.remove('active');
-            document.body.style.overflow = 'auto'; // Re-enable scroll
+            document.body.style.overflow = 'auto';
         }
+
+        // Stop propagation only when clicking the image to allow closing when clicking background
+        fullImg.onclick = (e) => e.stopPropagation();
     </script>
 </body>
 
