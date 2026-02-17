@@ -373,6 +373,29 @@
                 `;
                 }
             }
+            else if (action === 'query') {
+                actionLabel = 'SQL QUERY';
+                badgeClass = 'badge-update';
+                metaInfo.innerHTML = `
+                    <span class="meta-tag ${badgeClass}" style="border:none;">${action.toUpperCase()}</span>
+                    <span class="meta-tag"><i class="fas fa-code"></i> ${data.type || 'QUERY'}</span>
+                    <span class="meta-tag"><i class="fas fa-user"></i> ${data.user || 'System'}</span>
+                    <span class="meta-tag"><i class="far fa-clock"></i> ${data.time || '-'}</span>
+                `;
+
+                html += `
+                    <div style="padding: 20px;">
+                        <div style="margin-bottom: 5px; color: var(--text-muted); font-size: 13px;">SQL Statement:</div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px; color: #e2e8f0; border: 1px solid var(--glass-border); overflow-x: auto; margin-bottom: 20px;">
+                            ${safe(data.sql)}
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="font-size: 14px; color: var(--text-muted);">Rows Affected:</div>
+                            <div class="badge badge-insert" style="font-size: 14px;">${data.affected}</div>
+                        </div>
+                    </div>
+                `;
+            }
             else {
                 // Update
                 html += `<div class="diff-header"><div>Kolom</div><div>Data Lama</div><div>Data Baru</div></div>`;
