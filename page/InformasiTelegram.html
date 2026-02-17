@@ -379,31 +379,28 @@
                 const oldData = data.old || {};
                 const newData = data.new || {};
 
-                // Get all unique keys
-                const allKeys = new Set([...Object.keys(oldData), ...Object.keys(newData)]);
+                // Only iterate keys that are present in the update payload
+                const updateKeys = Object.keys(newData);
 
-                allKeys.forEach(key => {
+                if (updateKeys.length === 0) {
+                    html += `<div class="diff-row" style="grid-column: 1/-1; justify-content:center; color:var(--text-muted);">Tidak ada perubahan data yang tercatat.</div>`;
+                }
+
+                updateKeys.forEach(key => {
                     const valOld = oldData[key];
                     const valNew = newData[key];
+
+                    // Loose comparison to handle string vs number differences
                     const isChanged = String(valOld) !== String(valNew);
 
                     if (isChanged) {
                         html += `
-                        <div class="diff-row">
-                            <div class="label">${key}</div>
-                            <div class="val val-old">${safe(valOld)}</div>
-                            <div class="val val-new">${safe(valNew)}</div>
-                        </div>
-                    `;
-                    } else {
-                        // Optional: Hide unchanged fields or show them dimmed?
-                        // Showing them dimmed for context
-                        html += `
-                        <div class="diff-row">
-                            <div class="label">${key}</div>
-                            <div class="val val-same" style="grid-column: 2 / -1;">${safe(valNew)}</div>
-                        </div>
-                    `;
+                            <div class="diff-row">
+                                <div class="label">${key}</div>
+                                <div class="val val-old">${safe(valOld)}</div>
+                                <div class="val val-new">${safe(valNew)}</div>
+                            </div>
+                        `;
                     }
                 });
             }
