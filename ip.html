@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cek IP (ipinfo.io)</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 16px; }
+    .box { padding: 12px; border: 1px solid #ddd; border-radius: 10px; display: inline-block; }
+    .hint { margin-top: 10px; color: #555; font-size: 14px; }
+    .status { margin-top: 10px; font-size: 14px; }
+    code { background: #f6f6f6; padding: 2px 6px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h2>Cek IP Pengguna</h2>
+
+  <div class="box">
+    <div><b>Output:</b></div>
+    <div id="output"><code>Memuat...</code></div>
+    <div class="hint">Klik di mana saja untuk menyalin: <code>ip|city|org</code></div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    const outputEl = document.getElementById('output');
+    const statusEl = document.getElementById('status');
+    let textToCopy = '';
+
+    async function loadIPInfo() {
+      try {
+        const res = await fetch('https://ipinfo.io/json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        const ip = (data.ip ?? '').trim();
+        const city = (data.city ?? '').trim();
+        const org = (data.org ?? '').trim();
+
+        textToCopy = `${ip}|${city}|${org}`;
+        outputEl.textContent = textToCopy;
+        statusEl.textContent = 'Siap. Klik halaman untuk menyalin.';
+      } catch (err) {
+        outputEl.textContent = 'Gagal memuat data dari ipinfo.io/json';
+        statusEl.textContent = 'Error: ' + err.message;
+      }
+    }
+
+    async function copyPlainText(txt) {
+      // Pastikan yang dicopy adalah plain text (tanpa format)
+      // ClipboardItem text/plain -> paste ke spreadsheet jadi normal
+      if (navigator.clipboard && window.ClipboardItem) {
+        const item = new ClipboardItem({
+          'text/plain': new Blob([txt], { type: 'text/plain' })
+        });
+        await navigator.clipboard.write([item]);
+      } else if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(txt);
+      } else {
+        // Fallback lama
+        const ta = document.createElement('textarea');
+        ta.value = txt;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+    }
+
+    document.addEventListener('click', async () => {
+      if (!textToCopy) return;
+      try {
+        await copyPlainText(textToCopy);
+        statusEl.textContent = '✅ Tersalin: ' + textToCopy;
+      } catch (e) {
+        statusEl.textContent = '❌ Gagal menyalin (browser menolak). Coba klik lagi / izinkan clipboard.';
+      }
+    });
+
+    loadIPInfo();
+  </script>
+</body>
+</html>
