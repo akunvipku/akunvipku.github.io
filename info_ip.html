@@ -3,52 +3,350 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cek IP (ipinfo.io)</title>
+  <title>Cek IP</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 16px; }
-    .box { padding: 12px; border: 1px solid #ddd; border-radius: 10px; display: inline-block; }
-    .hint { margin-top: 10px; color: #555; font-size: 14px; }
-    .status { margin-top: 10px; font-size: 14px; }
-    code { background: #f6f6f6; padding: 2px 6px; border-radius: 6px; }
-  </style>
-</head>
-<body>
-  <h2>Cek IP Pengguna</h2>
+    :root{
+      --bg: #0b1220;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.06);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --line: rgba(255,255,255,.14);
+      --ok: #2ee59d;
+      --warn: #ffcc66;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 22px;
+    }
 
-  <div class="box">
-    <div><b>Output:</b></div>
-    <div id="output"><code>Memuat...</code></div>
-    <div class="hint">Klik di mana saja untuk menyalin: <code>ip|city|org</code></div>
-    <div class="status" id="status"></div>
-  </div>
-
-  <script>
-    const outputEl = document.getElementById('output');
-    const statusEl = document.getElementById('status');
-    let textToCopy = '';
-
-    async function loadIPInfo() {
-      try {
-        const res = await fetch('https://ipinfo.io/json', { cache: 'no-store' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-
-        const ip = (data.ip ?? '').trim();
-        const city = (data.city ?? '').trim();
-        const org = (data.org ?? '').trim();
-
-        textToCopy = `${ip}|${city}|${org}`;
-        outputEl.textContent = textToCopy;
-        statusEl.textContent = 'Siap. Klik halaman untuk menyalin.';
-      } catch (err) {
-        outputEl.textContent = 'Gagal memuat data dari ipinfo.io/json';
-        statusEl.textContent = 'Error: ' + err.message;
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f6f7fb;
+        --card: rgba(0,0,0,.05);
+        --card2: rgba(0,0,0,.035);
+        --text: rgba(0,0,0,.88);
+        --muted: rgba(0,0,0,.6);
+        --line: rgba(0,0,0,.12);
+        --shadow: 0 18px 60px rgba(0,0,0,.12);
       }
     }
 
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue";
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 15% 15%, rgba(46,229,157,.22), transparent 55%),
+        radial-gradient(900px 700px at 85% 20%, rgba(88,135,255,.20), transparent 55%),
+        radial-gradient(900px 700px at 55% 95%, rgba(255,204,102,.18), transparent 55%),
+        var(--bg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 24px;
+    }
+
+    .wrap{
+      width:min(900px, 100%);
+      display:grid;
+      gap:18px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .logo{
+      width:44px; height:44px;
+      border-radius:14px;
+      background: linear-gradient(135deg, rgba(46,229,157,.9), rgba(88,135,255,.9));
+      box-shadow: var(--shadow);
+    }
+    .title{
+      line-height:1.1;
+    }
+    .title h1{
+      font-size: 18px;
+      margin:0;
+      letter-spacing:.2px;
+    }
+    .title p{
+      margin:4px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pill{
+      border:1px solid var(--line);
+      background: var(--card2);
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      color: var(--muted);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+    }
+    @media (max-width: 740px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .card .head{
+      padding:18px 18px 0;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .card .head h2{
+      margin:0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .card .head span{
+      font-size:12px;
+      color: var(--muted);
+    }
+
+    .main{
+      padding:18px;
+    }
+
+    .big{
+      font-size:20px;
+      font-weight:700;
+      letter-spacing:.2px;
+      padding:14px 14px;
+      border-radius:16px;
+      border:1px dashed var(--line);
+      background: rgba(255,255,255,.06);
+      user-select:text;
+      word-break: break-all;
+    }
+
+    .actions{
+      margin-top:14px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.07);
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-weight:700;
+      letter-spacing:.2px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .06s ease, background .2s ease;
+    }
+    .btn:hover{ background: rgba(255,255,255,.10); }
+    .btn:active{ transform: scale(.99); }
+
+    .btn.primary{
+      border: none;
+      background: linear-gradient(135deg, rgba(46,229,157,.95), rgba(88,135,255,.95));
+      color: #05121b;
+    }
+
+    .note{
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height:1.45;
+    }
+
+    .side{
+      padding:18px;
+      display:grid;
+      gap:12px;
+    }
+
+    .kv{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      border-radius: 18px;
+      padding: 14px;
+      display:grid;
+      gap:6px;
+    }
+    .kv .k{
+      font-size:12px;
+      color: var(--muted);
+    }
+    .kv .v{
+      font-size:14px;
+      font-weight:700;
+      word-break:break-word;
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.68);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      backdrop-filter: blur(10px);
+    }
+    @media (prefers-color-scheme: light){
+      .toast{ background: rgba(30,30,30,.78); }
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .click-anywhere{
+      font-size:12px;
+      color: var(--muted);
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      user-select:none;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:999px;
+      background: var(--warn);
+      box-shadow: 0 0 0 6px rgba(255,204,102,.15);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">
+          <h1>Cek IP Pengguna</h1>
+          <p>Klik di mana saja untuk menyalin format <b>ip|city|org</b></p>
+        </div>
+      </div>
+      <div class="pill" id="pill">⏳ Memuat…</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="head">
+          <div>
+            <h2>Siap Copy ke Spreadsheet</h2>
+            <span>Format: ip|city|org (plain text)</span>
+          </div>
+          <span id="time"></span>
+        </div>
+
+        <div class="main">
+          <div class="big" id="output">Memuat data…</div>
+
+          <div class="actions">
+            <button class="btn primary" id="copyBtn">Salin Sekarang</button>
+            <button class="btn" id="refreshBtn">Refresh</button>
+          </div>
+
+          <div class="click-anywhere">
+            <span class="dot"></span>
+            <span>Tips: di mode “salon”, tinggal klik layar → otomatis tersalin.</span>
+          </div>
+
+          <div class="note" id="note">
+            Jika browser menolak clipboard, klik tombol <b>Salin Sekarang</b> (biasanya butuh gesture).
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head">
+          <div>
+            <h2>Detail</h2>
+            <span>Data mentah (ringkas)</span>
+          </div>
+        </div>
+        <div class="side">
+          <div class="kv">
+            <div class="k">IP</div>
+            <div class="v" id="ip">-</div>
+          </div>
+          <div class="kv">
+            <div class="k">City</div>
+            <div class="v" id="city">-</div>
+          </div>
+          <div class="kv">
+            <div class="k">Org (ISP)</div>
+            <div class="v" id="org">-</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Tersalin</div>
+
+  <script>
+    const outputEl = document.getElementById('output');
+    const pillEl = document.getElementById('pill');
+    const toastEl = document.getElementById('toast');
+
+    const ipEl = document.getElementById('ip');
+    const cityEl = document.getElementById('city');
+    const orgEl = document.getElementById('org');
+
+    const copyBtn = document.getElementById('copyBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const timeEl = document.getElementById('time');
+
+    let textToCopy = '';
+
+    function setTime(){
+      const d = new Date();
+      timeEl.textContent = d.toLocaleString('id-ID', { hour: '2-digit', minute:'2-digit', day:'2-digit', month:'short' });
+    }
+    setTime();
+    setInterval(setTime, 60000);
+
+    function showToast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 1200);
+    }
+
     async function copyPlainText(txt) {
-      // Pastikan yang dicopy adalah plain text (tanpa format)
-      // ClipboardItem text/plain -> paste ke spreadsheet jadi normal
+      // Copy sebagai text/plain supaya saat paste ke spreadsheet font & warna normal.
       if (navigator.clipboard && window.ClipboardItem) {
         const item = new ClipboardItem({
           'text/plain': new Blob([txt], { type: 'text/plain' })
@@ -57,7 +355,6 @@
       } else if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(txt);
       } else {
-        // Fallback lama
         const ta = document.createElement('textarea');
         ta.value = txt;
         ta.setAttribute('readonly', '');
@@ -70,15 +367,60 @@
       }
     }
 
-    document.addEventListener('click', async () => {
+    function setState(loading, okText){
+      if (loading){
+        pillEl.textContent = '⏳ Memuat…';
+      } else {
+        pillEl.textContent = okText || '✅ Siap disalin';
+      }
+    }
+
+    async function loadIPInfo() {
+      setState(true);
+      outputEl.textContent = 'Memuat data…';
+
+      try {
+        const res = await fetch('https://ipinfo.io/json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        const ip = (data.ip ?? '').trim();
+        const city = (data.city ?? '').trim();
+        const org = (data.org ?? '').trim();
+
+        textToCopy = `${ip}|${city}|${org}`;
+
+        outputEl.textContent = textToCopy;
+        ipEl.textContent = ip || '-';
+        cityEl.textContent = city || '-';
+        orgEl.textContent = org || '-';
+
+        setState(false, '✅ Siap disalin');
+      } catch (err) {
+        outputEl.textContent = 'Gagal memuat data. Cek koneksi / izin browser.';
+        setState(false, '⚠️ Gagal memuat');
+        showToast('Gagal memuat');
+      }
+    }
+
+    async function doCopy(){
       if (!textToCopy) return;
       try {
         await copyPlainText(textToCopy);
-        statusEl.textContent = '✅ Tersalin: ' + textToCopy;
-      } catch (e) {
-        statusEl.textContent = '❌ Gagal menyalin (browser menolak). Coba klik lagi / izinkan clipboard.';
+        showToast('✅ Tersalin');
+        setState(false, '📋 Tersalin');
+        setTimeout(() => setState(false, '✅ Siap disalin'), 900);
+      } catch {
+        showToast('❌ Clipboard ditolak');
       }
-    });
+    }
+
+    // Tombol
+    copyBtn.addEventListener('click', (e) => { e.stopPropagation(); doCopy(); });
+    refreshBtn.addEventListener('click', (e) => { e.stopPropagation(); loadIPInfo(); });
+
+    // Mode “salon”: klik di mana saja untuk salin
+    document.addEventListener('click', () => doCopy());
 
     loadIPInfo();
   </script>
