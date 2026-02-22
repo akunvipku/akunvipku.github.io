@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MostLogin Proxy Creator</title>
+
+<style>
+  * { box-sizing: border-box; font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif; }
+  body{
+    margin:0; height:100vh; display:flex; justify-content:center; align-items:center;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    padding: 18px;
+  }
+
+  .container{
+    width: 100%;
+    max-width: 560px;
+    background:#fff;
+    border-radius: 22px;
+    padding: 34px 32px;
+    box-shadow: 0 22px 60px rgba(0,0,0,.28);
+    animation: fadeIn .55s ease-out;
+  }
+
+  .title{
+    text-align:center;
+    margin: 0 0 6px 0;
+    color:#1e3c72;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: .2px;
+  }
+  .subtitle{
+    text-align:center;
+    margin: 0 0 26px 0;
+    color: #5b6b87;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  label{
+    display:block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #203357;
+    margin: 14px 0 8px 0;
+  }
+
+  .field{
+    position: relative;
+  }
+
+  input, textarea{
+    width:100%;
+    border: 1px solid #d7deea;
+    border-radius: 14px;
+    padding: 12px 46px 12px 12px; /* space for icon button */
+    font-size: 14px;
+    outline: none;
+    transition: .2s;
+    background: #fff;
+  }
+  textarea{ resize: vertical; min-height: 84px; }
+
+  input:focus, textarea:focus{
+    border-color:#2a5298;
+    box-shadow: 0 0 0 4px rgba(42,82,152,.12);
+  }
+
+  .icon-btn{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: 1px solid #d7deea;
+    background: #f7f9fd;
+    display: none; /* toggled by JS */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .18s;
+    user-select: none;
+  }
+  .icon-btn:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(0,0,0,.08);
+  }
+  .icon-btn:active{ transform: translateY(0px); }
+  .icon{
+    width: 18px; height: 18px;
+    opacity: .9;
+  }
+
+  .btn{
+    width:100%;
+    margin-top: 18px;
+    border:none;
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor:pointer;
+    color:#fff;
+    font-weight: 800;
+    font-size: 14px;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    transition: .2s;
+  }
+  .btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px rgba(0,0,0,.18);
+  }
+
+  .actions{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .btn-secondary{
+    display:none; /* shown when url exists */
+    background: #0f172a;
+  }
+
+  .result-wrap{
+    margin-top: 18px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #0b1220;
+  }
+  .result-head{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    background:#0b1220;
+    padding: 10px 12px;
+    color: #cbd5e1;
+    font-size: 12px;
+  }
+  .badge{
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(203,213,225,.25);
+    color:#e2e8f0;
+    font-weight: 700;
+  }
+  pre{
+    margin:0;
+    padding: 12px;
+    background:#0f172a;
+    color:#00ff88;
+    font-size: 12.5px;
+    line-height: 1.45;
+    max-height: 280px;
+    overflow:auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  @keyframes fadeIn{
+    from{ opacity:0; transform: translateY(18px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+</style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="title">Create Proxy Account</h1>
+    <p class="subtitle">Masukkan <b>Authorization</b> dan <b>User Email</b> lalu kirim request. Saat sukses, tombol open URL akan muncul.</p>
+
+    <label for="auth">Authorization Token</label>
+    <div class="field">
+      <textarea id="auth" placeholder="Paste Authorization token here"></textarea>
+
+      <!-- Paste icon (clipboard) - shown when empty -->
+      <button class="icon-btn" id="authPaste" type="button" title="Paste from clipboard">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 4h6m-6 0a2 2 0 0 0-2 2v1h10V6a2 2 0 0 0-2-2m-6 0V3h6v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M7 7h10v14H7V7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- X icon - shown when filled -->
+      <button class="icon-btn" id="authClear" type="button" title="Clear">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <label for="email">User Email</label>
+    <div class="field">
+      <input id="email" type="email" placeholder="example@email.com" />
+
+      <button class="icon-btn" id="emailPaste" type="button" title="Paste from clipboard">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 4h6m-6 0a2 2 0 0 0-2 2v1h10V6a2 2 0 0 0-2-2m-6 0V3h6v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M7 7h10v14H7V7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button class="icon-btn" id="emailClear" type="button" title="Clear">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="sendBtn" type="button">Send Request</button>
+      <button class="btn btn-secondary" id="openUrlBtn" type="button">Open URL in New Tab</button>
+    </div>
+
+    <div class="result-wrap">
+      <div class="result-head">
+        <div>Response</div>
+        <div class="badge" id="statusBadge">Idle</div>
+      </div>
+      <pre id="result">Response will appear here...</pre>
+    </div>
+  </div>
+
+<script>
+  const authEl = document.getElementById("auth");
+  const emailEl = document.getElementById("email");
+
+  const authPasteBtn = document.getElementById("authPaste");
+  const authClearBtn = document.getElementById("authClear");
+  const emailPasteBtn = document.getElementById("emailPaste");
+  const emailClearBtn = document.getElementById("emailClear");
+
+  const sendBtn = document.getElementById("sendBtn");
+  const openUrlBtn = document.getElementById("openUrlBtn");
+
+  const resultPre = document.getElementById("result");
+  const statusBadge = document.getElementById("statusBadge");
+
+  let lastSuccessUrl = "";
+
+  function toggleMiniButtons(el, pasteBtn, clearBtn) {
+    const hasValue = (el.value || "").trim().length > 0;
+    // sesuai permintaan:
+    // - paste muncul saat input kosong
+    // - silang muncul saat input isi
+    pasteBtn.style.display = hasValue ? "none" : "flex";
+    clearBtn.style.display = hasValue ? "flex" : "none";
+  }
+
+  async function pasteFromClipboardInto(el) {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!text) return;
+      el.value = text.trim();
+      el.dispatchEvent(new Event("input"));
+      el.focus();
+    } catch (e) {
+      alert("Clipboard tidak bisa dibaca. Jalankan di HTTPS atau localhost, lalu izin clipboard.");
+    }
+  }
+
+  function clearField(el) {
+    el.value = "";
+    el.dispatchEvent(new Event("input"));
+    el.focus();
+  }
+
+  // init toggles
+  toggleMiniButtons(authEl, authPasteBtn, authClearBtn);
+  toggleMiniButtons(emailEl, emailPasteBtn, emailClearBtn);
+
+  authEl.addEventListener("input", () => toggleMiniButtons(authEl, authPasteBtn, authClearBtn));
+  emailEl.addEventListener("input", () => toggleMiniButtons(emailEl, emailPasteBtn, emailClearBtn));
+
+  authPasteBtn.addEventListener("click", () => pasteFromClipboardInto(authEl));
+  emailPasteBtn.addEventListener("click", () => pasteFromClipboardInto(emailEl));
+
+  authClearBtn.addEventListener("click", () => clearField(authEl));
+  emailClearBtn.addEventListener("click", () => clearField(emailEl));
+
+  openUrlBtn.addEventListener("click", () => {
+    if (!lastSuccessUrl) return;
+    window.open(lastSuccessUrl, "_blank", "noopener,noreferrer");
+  });
+
+  sendBtn.addEventListener("click", sendRequest);
+
+  function setStatus(text) {
+    statusBadge.textContent = text;
+  }
+
+  function prettyPrintJson(obj) {
+    return JSON.stringify(obj, null, 2);
+  }
+
+  async function sendRequest() {
+    const auth = authEl.value.trim();
+    const email = emailEl.value.trim();
+
+    if (!auth || !email) {
+      alert("Authorization dan Email wajib diisi!");
+      return;
+    }
+
+    setStatus("Sending...");
+    resultPre.textContent = "Sending request...";
+    openUrlBtn.style.display = "none";
+    lastSuccessUrl = "";
+
+    try {
+      const res = await fetch("https://webapi.mostlogin.com/mostLogin/global/proxySetting/create/account", {
+        method: "POST",
+        headers: {
+          "Authorization": auth,
+          "Content-Type": "application/json;charset=UTF-8",
+          "Accept": "*/*",
+          "X-Source": "app"
+        },
+        body: JSON.stringify({
+          provider: "BestProxy",
+          userEmail: email,
+          enable2FA: false
+        })
+      });
+
+      const text = await res.text();
+
+      // coba parse JSON agar bisa ambil result.url
+      let parsed = null;
+      try { parsed = JSON.parse(text); } catch (_) {}
+
+      if (parsed) {
+        resultPre.textContent = prettyPrintJson(parsed);
+
+        // Jika sukses dan ada url -> tampilkan tombol open new tab
+        const url = parsed?.result?.url;
+        const code = parsed?.code;
+
+        if (code === 20000 && typeof url === "string" && url.trim()) {
+          lastSuccessUrl = url.trim();
+          openUrlBtn.style.display = "block";
+          setStatus("Success");
+        } else {
+          setStatus("Done");
+        }
+      } else {
+        // bukan JSON
+        resultPre.textContent = text;
+        setStatus("Done");
+      }
+
+    } catch (err) {
+      resultPre.textContent = "Error: " + err;
+      setStatus("Error");
+    }
+  }
+</script>
+
+</body>
+</html>
