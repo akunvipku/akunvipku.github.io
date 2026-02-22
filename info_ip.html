@@ -1,428 +1,501 @@
 <!doctype html>
 <html lang="id">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cek IP</title>
-  <style>
-    :root{
-      --bg: #0b1220;
-      --card: rgba(255,255,255,.08);
-      --card2: rgba(255,255,255,.06);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.68);
-      --line: rgba(255,255,255,.14);
-      --ok: #2ee59d;
-      --warn: #ffcc66;
-      --shadow: 0 18px 60px rgba(0,0,0,.45);
-      --radius: 22px;
-    }
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cek IP</title>
+    <style>
+        :root {
+            --bg: #0b1220;
+            --card: rgba(255, 255, 255, .08);
+            --card2: rgba(255, 255, 255, .06);
+            --text: rgba(255, 255, 255, .92);
+            --muted: rgba(255, 255, 255, .68);
+            --line: rgba(255, 255, 255, .14);
+            --ok: #2ee59d;
+            --warn: #ffcc66;
+            --shadow: 0 18px 60px rgba(0, 0, 0, .45);
+            --radius: 22px;
+        }
 
-    @media (prefers-color-scheme: light){
-      :root{
-        --bg: #f6f7fb;
-        --card: rgba(0,0,0,.05);
-        --card2: rgba(0,0,0,.035);
-        --text: rgba(0,0,0,.88);
-        --muted: rgba(0,0,0,.6);
-        --line: rgba(0,0,0,.12);
-        --shadow: 0 18px 60px rgba(0,0,0,.12);
-      }
-    }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f6f7fb;
+                --card: rgba(0, 0, 0, .05);
+                --card2: rgba(0, 0, 0, .035);
+                --text: rgba(0, 0, 0, .88);
+                --muted: rgba(0, 0, 0, .6);
+                --line: rgba(0, 0, 0, .12);
+                --shadow: 0 18px 60px rgba(0, 0, 0, .12);
+            }
+        }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue";
-      color: var(--text);
-      background:
-        radial-gradient(1200px 800px at 15% 15%, rgba(46,229,157,.22), transparent 55%),
-        radial-gradient(900px 700px at 85% 20%, rgba(88,135,255,.20), transparent 55%),
-        radial-gradient(900px 700px at 55% 95%, rgba(255,204,102,.18), transparent 55%),
-        var(--bg);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 24px;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    .wrap{
-      width:min(900px, 100%);
-      display:grid;
-      gap:18px;
-    }
+        html,
+        body {
+            height: 100%;
+        }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue";
+            color: var(--text);
+            background:
+                radial-gradient(1200px 800px at 15% 15%, rgba(46, 229, 157, .22), transparent 55%),
+                radial-gradient(900px 700px at 85% 20%, rgba(88, 135, 255, .20), transparent 55%),
+                radial-gradient(900px 700px at 55% 95%, rgba(255, 204, 102, .18), transparent 55%),
+                var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-    .logo{
-      width:44px; height:44px;
-      border-radius:14px;
-      background: linear-gradient(135deg, rgba(46,229,157,.9), rgba(88,135,255,.9));
-      box-shadow: var(--shadow);
-    }
-    .title{
-      line-height:1.1;
-    }
-    .title h1{
-      font-size: 18px;
-      margin:0;
-      letter-spacing:.2px;
-    }
-    .title p{
-      margin:4px 0 0;
-      font-size: 13px;
-      color: var(--muted);
-    }
+        .wrap {
+            width: min(900px, 100%);
+            display: grid;
+            gap: 18px;
+        }
 
-    .pill{
-      border:1px solid var(--line);
-      background: var(--card2);
-      padding:10px 12px;
-      border-radius:999px;
-      font-size:13px;
-      color: var(--muted);
-      display:flex;
-      align-items:center;
-      gap:8px;
-      user-select:none;
-    }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:18px;
-    }
-    @media (max-width: 740px){
-      .grid{ grid-template-columns:1fr; }
-    }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .card{
-      background: var(--card);
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
+        .logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(46, 229, 157, .9), rgba(88, 135, 255, .9));
+            box-shadow: var(--shadow);
+        }
 
-    .card .head{
-      padding:18px 18px 0;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-    }
+        .title {
+            line-height: 1.1;
+        }
 
-    .card .head h2{
-      margin:0;
-      font-size:16px;
-      letter-spacing:.2px;
-    }
-    .card .head span{
-      font-size:12px;
-      color: var(--muted);
-    }
+        .title h1 {
+            font-size: 18px;
+            margin: 0;
+            letter-spacing: .2px;
+        }
 
-    .main{
-      padding:18px;
-    }
+        .title p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            color: var(--muted);
+        }
 
-    .big{
-      font-size:20px;
-      font-weight:700;
-      letter-spacing:.2px;
-      padding:14px 14px;
-      border-radius:16px;
-      border:1px dashed var(--line);
-      background: rgba(255,255,255,.06);
-      user-select:text;
-      word-break: break-all;
-    }
+        .pill {
+            border: 1px solid var(--line);
+            background: var(--card2);
+            padding: 10px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
 
-    .actions{
-      margin-top:14px;
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 18px;
+        }
 
-    .btn{
-      appearance:none;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.07);
-      color: var(--text);
-      padding: 12px 14px;
-      border-radius: 16px;
-      font-weight:700;
-      letter-spacing:.2px;
-      cursor:pointer;
-      user-select:none;
-      transition: transform .06s ease, background .2s ease;
-    }
-    .btn:hover{ background: rgba(255,255,255,.10); }
-    .btn:active{ transform: scale(.99); }
+        @media (max-width: 740px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
 
-    .btn.primary{
-      border: none;
-      background: linear-gradient(135deg, rgba(46,229,157,.95), rgba(88,135,255,.95));
-      color: #05121b;
-    }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
 
-    .note{
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height:1.45;
-    }
+        .card .head {
+            padding: 18px 18px 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
 
-    .side{
-      padding:18px;
-      display:grid;
-      gap:12px;
-    }
+        .card .head h2 {
+            margin: 0;
+            font-size: 16px;
+            letter-spacing: .2px;
+        }
 
-    .kv{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.06);
-      border-radius: 18px;
-      padding: 14px;
-      display:grid;
-      gap:6px;
-    }
-    .kv .k{
-      font-size:12px;
-      color: var(--muted);
-    }
-    .kv .v{
-      font-size:14px;
-      font-weight:700;
-      word-break:break-word;
-    }
+        .card .head span {
+            font-size: 12px;
+            color: var(--muted);
+        }
 
-    .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,.68);
-      color: #fff;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s ease, transform .2s ease;
-      backdrop-filter: blur(10px);
-    }
-    @media (prefers-color-scheme: light){
-      .toast{ background: rgba(30,30,30,.78); }
-    }
-    .toast.show{
-      opacity: 1;
-      transform: translateX(-50%) translateY(-4px);
-    }
+        .main {
+            padding: 18px;
+        }
 
-    .click-anywhere{
-      font-size:12px;
-      color: var(--muted);
-      margin-top:10px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      user-select:none;
-    }
-    .dot{
-      width:8px;height:8px;border-radius:999px;
-      background: var(--warn);
-      box-shadow: 0 0 0 6px rgba(255,204,102,.15);
-    }
-  </style>
+        .big {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: .2px;
+            padding: 14px 14px;
+            border-radius: 16px;
+            border: 1px dashed var(--line);
+            background: rgba(255, 255, 255, .06);
+            user-select: text;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+
+        .actions {
+            margin-top: 14px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            appearance: none;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .07);
+            color: var(--text);
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-weight: 700;
+            letter-spacing: .2px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform .06s ease, background .2s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, .10);
+        }
+
+        .btn:active {
+            transform: scale(.99);
+        }
+
+        .btn.primary {
+            border: none;
+            background: linear-gradient(135deg, rgba(46, 229, 157, .95), rgba(88, 135, 255, .95));
+            color: #05121b;
+        }
+
+        .note {
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .side {
+            padding: 18px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .kv {
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .06);
+            border-radius: 18px;
+            padding: 14px;
+            display: grid;
+            gap: 6px;
+        }
+
+        .kv .k {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .kv .v {
+            font-size: 14px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, .68);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease, transform .2s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (prefers-color-scheme: light) {
+            .toast {
+                background: rgba(30, 30, 30, .78);
+            }
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-4px);
+        }
+
+        .click-anywhere {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            user-select: none;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--warn);
+            box-shadow: 0 0 0 6px rgba(255, 204, 102, .15);
+        }
+    </style>
 </head>
+
 <body>
-  <div class="wrap" id="app">
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div class="title">
-          <h1>Cek IP Pengguna</h1>
-          <p>Klik di mana saja untuk menyalin format <b>ip|city|org</b></p>
+    <div class="wrap" id="app">
+        <div class="topbar">
+            <div class="brand">
+                <div class="logo" aria-hidden="true"></div>
+                <div class="title">
+                    <h1>Cek IP Pengguna</h1>
+                    <p>Klik di mana saja untuk menyalin info IP, OS, & Browser</p>
+                </div>
+            </div>
+            <div class="pill" id="pill">⏳ Memuat…</div>
         </div>
-      </div>
-      <div class="pill" id="pill">⏳ Memuat…</div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="head">
+                    <div>
+                        <h2>Siap Copy ke Spreadsheet</h2>
+                        <span>Format: ip|city|org (termasuk OS & Browser)</span>
+                    </div>
+                    <span id="time"></span>
+                </div>
+
+                <div class="main">
+                    <div class="big" id="output">Memuat data…</div>
+
+                    <div class="actions">
+                        <button class="btn primary" id="copyBtn">Salin Sekarang</button>
+                        <button class="btn" id="refreshBtn">Refresh</button>
+                    </div>
+
+                    <div class="click-anywhere">
+                        <span class="dot"></span>
+                        <span>Tips: di mode “salon”, tinggal klik layar → otomatis tersalin.</span>
+                    </div>
+
+                    <div class="note" id="note">
+                        Jika browser menolak clipboard, klik tombol <b>Salin Sekarang</b> (biasanya butuh gesture).
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="head">
+                    <div>
+                        <h2>Detail</h2>
+                        <span>Data mentah (ringkas)</span>
+                    </div>
+                </div>
+                <div class="side">
+                    <div class="kv">
+                        <div class="k">IP</div>
+                        <div class="v" id="ip">-</div>
+                    </div>
+                    <div class="kv">
+                        <div class="k">City</div>
+                        <div class="v" id="city">-</div>
+                    </div>
+                    <div class="kv">
+                        <div class="k">Org (ISP)</div>
+                        <div class="v" id="org">-</div>
+                    </div>
+                    <div class="kv">
+                        <div class="k">OS</div>
+                        <div class="v" id="os">-</div>
+                    </div>
+                    <div class="kv">
+                        <div class="k">Browser</div>
+                        <div class="v" id="browser">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <div class="head">
-          <div>
-            <h2>Siap Copy ke Spreadsheet</h2>
-            <span>Format: ip|city|org (plain text)</span>
-          </div>
-          <span id="time"></span>
-        </div>
+    <div class="toast" id="toast">Tersalin</div>
 
-        <div class="main">
-          <div class="big" id="output">Memuat data…</div>
+    <script>
+        const outputEl = document.getElementById('output');
+        const pillEl = document.getElementById('pill');
+        const toastEl = document.getElementById('toast');
 
-          <div class="actions">
-            <button class="btn primary" id="copyBtn">Salin Sekarang</button>
-            <button class="btn" id="refreshBtn">Refresh</button>
-          </div>
+        const ipEl = document.getElementById('ip');
+        const cityEl = document.getElementById('city');
+        const orgEl = document.getElementById('org');
+        const osEl = document.getElementById('os');
+        const browserEl = document.getElementById('browser');
 
-          <div class="click-anywhere">
-            <span class="dot"></span>
-            <span>Tips: di mode “salon”, tinggal klik layar → otomatis tersalin.</span>
-          </div>
+        const copyBtn = document.getElementById('copyBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const timeEl = document.getElementById('time');
 
-          <div class="note" id="note">
-            Jika browser menolak clipboard, klik tombol <b>Salin Sekarang</b> (biasanya butuh gesture).
-          </div>
-        </div>
-      </div>
+        let textToCopy = '';
 
-      <div class="card">
-        <div class="head">
-          <div>
-            <h2>Detail</h2>
-            <span>Data mentah (ringkas)</span>
-          </div>
-        </div>
-        <div class="side">
-          <div class="kv">
-            <div class="k">IP</div>
-            <div class="v" id="ip">-</div>
-          </div>
-          <div class="kv">
-            <div class="k">City</div>
-            <div class="v" id="city">-</div>
-          </div>
-          <div class="kv">
-            <div class="k">Org (ISP)</div>
-            <div class="v" id="org">-</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+        function setTime() {
+            const d = new Date();
+            timeEl.textContent = d.toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+        }
+        setTime();
+        setInterval(setTime, 60000);
 
-  <div class="toast" id="toast">Tersalin</div>
+        function getOSAndBrowser() {
+            let os = 'Unknown OS';
+            const ua = navigator.userAgent;
+            if (ua.indexOf('Win') !== -1) os = 'Windows';
+            if (ua.indexOf('Mac') !== -1) os = 'MacOS';
+            if (ua.indexOf('Linux') !== -1) os = 'Linux';
+            if (ua.indexOf('Android') !== -1) os = 'Android';
+            if (/iPad|iPhone|iPod/.test(ua)) os = 'iOS';
 
-  <script>
-    const outputEl = document.getElementById('output');
-    const pillEl = document.getElementById('pill');
-    const toastEl = document.getElementById('toast');
+            let browser = 'Unknown Browser';
+            if (ua.includes('Edg/')) {
+                browser = 'Edge ' + ua.split('Edg/')[1].split(' ')[0];
+            } else if (ua.includes('OPR/')) {
+                browser = 'Opera ' + ua.split('OPR/')[1].split(' ')[0];
+            } else if (ua.includes('Chrome/')) {
+                browser = 'Chrome ' + ua.split('Chrome/')[1].split(' ')[0];
+            } else if (ua.includes('Firefox/')) {
+                browser = 'Firefox ' + ua.split('Firefox/')[1].split(' ')[0];
+            } else if (ua.includes('Safari/')) {
+                let ver = ua.includes('Version/') ? ua.split('Version/')[1].split(' ')[0] : '';
+                browser = 'Safari ' + ver;
+            }
+            return { os, browser };
+        }
 
-    const ipEl = document.getElementById('ip');
-    const cityEl = document.getElementById('city');
-    const orgEl = document.getElementById('org');
+        function showToast(msg) {
+            toastEl.textContent = msg;
+            toastEl.classList.add('show');
+            setTimeout(() => toastEl.classList.remove('show'), 1200);
+        }
 
-    const copyBtn = document.getElementById('copyBtn');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const timeEl = document.getElementById('time');
+        async function copyPlainText(txt) {
+            // Copy sebagai text/plain supaya saat paste ke spreadsheet font & warna normal.
+            if (navigator.clipboard && window.ClipboardItem) {
+                const item = new ClipboardItem({
+                    'text/plain': new Blob([txt], { type: 'text/plain' })
+                });
+                await navigator.clipboard.write([item]);
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(txt);
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = txt;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+        }
 
-    let textToCopy = '';
+        function setState(loading, okText) {
+            if (loading) {
+                pillEl.textContent = '⏳ Memuat…';
+            } else {
+                pillEl.textContent = okText || '✅ Siap disalin';
+            }
+        }
 
-    function setTime(){
-      const d = new Date();
-      timeEl.textContent = d.toLocaleString('id-ID', { hour: '2-digit', minute:'2-digit', day:'2-digit', month:'short' });
-    }
-    setTime();
-    setInterval(setTime, 60000);
+        async function loadIPInfo() {
+            setState(true);
+            outputEl.textContent = 'Memuat data…';
 
-    function showToast(msg){
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      setTimeout(() => toastEl.classList.remove('show'), 1200);
-    }
+            try {
+                const res = await fetch('https://ipinfo.io/json', { cache: 'no-store' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
 
-    async function copyPlainText(txt) {
-      // Copy sebagai text/plain supaya saat paste ke spreadsheet font & warna normal.
-      if (navigator.clipboard && window.ClipboardItem) {
-        const item = new ClipboardItem({
-          'text/plain': new Blob([txt], { type: 'text/plain' })
-        });
-        await navigator.clipboard.write([item]);
-      } else if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(txt);
-      } else {
-        const ta = document.createElement('textarea');
-        ta.value = txt;
-        ta.setAttribute('readonly', '');
-        ta.style.position = 'fixed';
-        ta.style.left = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      }
-    }
+                const ip = (data.ip ?? '').trim();
+                const city = (data.city ?? '').trim();
+                const org = (data.org ?? '').trim();
 
-    function setState(loading, okText){
-      if (loading){
-        pillEl.textContent = '⏳ Memuat…';
-      } else {
-        pillEl.textContent = okText || '✅ Siap disalin';
-      }
-    }
+                const sys = getOSAndBrowser();
+                textToCopy = `${ip}|${city}|${org}\n${sys.os}\n${sys.browser}`;
 
-    async function loadIPInfo() {
-      setState(true);
-      outputEl.textContent = 'Memuat data…';
+                outputEl.textContent = textToCopy;
+                ipEl.textContent = ip || '-';
+                cityEl.textContent = city || '-';
+                orgEl.textContent = org || '-';
+                osEl.textContent = sys.os;
+                browserEl.textContent = sys.browser;
 
-      try {
-        const res = await fetch('https://ipinfo.io/json', { cache: 'no-store' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
+                setState(false, '✅ Siap disalin');
+            } catch (err) {
+                outputEl.textContent = 'Gagal memuat data. Cek koneksi / izin browser.';
+                setState(false, '⚠️ Gagal memuat');
+                showToast('Gagal memuat');
+            }
+        }
 
-        const ip = (data.ip ?? '').trim();
-        const city = (data.city ?? '').trim();
-        const org = (data.org ?? '').trim();
+        async function doCopy() {
+            if (!textToCopy) return;
+            try {
+                await copyPlainText(textToCopy);
+                showToast('✅ Tersalin');
+                setState(false, '📋 Tersalin');
+                setTimeout(() => setState(false, '✅ Siap disalin'), 900);
+            } catch {
+                showToast('❌ Clipboard ditolak');
+            }
+        }
 
-        textToCopy = `${ip}|${city}|${org}`;
+        // Tombol
+        copyBtn.addEventListener('click', (e) => { e.stopPropagation(); doCopy(); });
+        refreshBtn.addEventListener('click', (e) => { e.stopPropagation(); loadIPInfo(); });
 
-        outputEl.textContent = textToCopy;
-        ipEl.textContent = ip || '-';
-        cityEl.textContent = city || '-';
-        orgEl.textContent = org || '-';
+        // Mode “salon”: klik di mana saja untuk salin
+        document.addEventListener('click', () => doCopy());
 
-        setState(false, '✅ Siap disalin');
-      } catch (err) {
-        outputEl.textContent = 'Gagal memuat data. Cek koneksi / izin browser.';
-        setState(false, '⚠️ Gagal memuat');
-        showToast('Gagal memuat');
-      }
-    }
-
-    async function doCopy(){
-      if (!textToCopy) return;
-      try {
-        await copyPlainText(textToCopy);
-        showToast('✅ Tersalin');
-        setState(false, '📋 Tersalin');
-        setTimeout(() => setState(false, '✅ Siap disalin'), 900);
-      } catch {
-        showToast('❌ Clipboard ditolak');
-      }
-    }
-
-    // Tombol
-    copyBtn.addEventListener('click', (e) => { e.stopPropagation(); doCopy(); });
-    refreshBtn.addEventListener('click', (e) => { e.stopPropagation(); loadIPInfo(); });
-
-    // Mode “salon”: klik di mana saja untuk salin
-    document.addEventListener('click', () => doCopy());
-
-    loadIPInfo();
-  </script>
+        loadIPInfo();
+    </script>
 </body>
+
 </html>
