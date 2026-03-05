@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery Codes - Secure Access</title>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --accent-color: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.3);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --success-color: #10b981;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 40%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .word-card {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .word-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px -5px var(--accent-glow);
+        }
+
+        .word-card .index {
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .word-card .word {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 10px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .copy-hint {
+            font-size: 0.7rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.3s ease;
+        }
+
+        .word-card:hover .copy-hint {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--success-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Success Icons */
+        .check-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Recovery Codes</h1>
+            <p class="subtitle">Securely store these backup words in a safe place.</p>
+        </header>
+
+        <div class="grid" id="codeGrid">
+            <!-- Codes will be injected here if we wanted JS dynamic row, but we'll hardcode for simplicity and SEO -->
+            <div class="word-card" onclick="copyWord('recall')">
+                <span class="index">1</span>
+                <span class="word">recall</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('glove')">
+                <span class="index">2</span>
+                <span class="word">glove</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('digital')">
+                <span class="index">3</span>
+                <span class="word">digital</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('staff')">
+                <span class="index">4</span>
+                <span class="word">staff</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('peasant')">
+                <span class="index">5</span>
+                <span class="word">peasant</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('judge')">
+                <span class="index">6</span>
+                <span class="word">judge</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('exotic')">
+                <span class="index">7</span>
+                <span class="word">exotic</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('motion')">
+                <span class="index">8</span>
+                <span class="word">motion</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('road')">
+                <span class="index">9</span>
+                <span class="word">road</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('piece')">
+                <span class="index">10</span>
+                <span class="word">piece</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('system')">
+                <span class="index">11</span>
+                <span class="word">system</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+            <div class="word-card" onclick="copyWord('amateur')">
+                <span class="index">12</span>
+                <span class="word">amateur</span>
+                <span class="copy-hint">Copy</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn" onclick="copyAll()">
+                <svg xmlns="http://www.w3.org/2003/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copy All Words
+            </button>
+        </div>
+    </div>
+
+    <div id="toast">
+        <svg class="check-icon" xmlns="http://www.w3.org/2003/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+        </svg>
+        <span id="toastMessage">Copied!</span>
+    </div>
+
+    <script>
+        const recoveryCodes = [
+            "recall", "glove", "digital", "staff",
+            "peasant", "judge", "exotic", "motion",
+            "road", "piece", "system", "amateur"
+        ];
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.innerText = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        async function copyWord(word) {
+            try {
+                await navigator.clipboard.writeText(word);
+                showToast(`"${word}" copied!`);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
+
+        async function copyAll() {
+            try {
+                const allWords = recoveryCodes.join(' ');
+                await navigator.clipboard.writeText(allWords);
+                showToast("All recovery codes copied!");
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
+        }
+    </script>
+</body>
+
+</html>
