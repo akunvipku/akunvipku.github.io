@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dana Manager - 3 Tabs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #f4f7fa;
+            --white: #ffffff;
+            --primary: #5c67f2;
+            --orange: #f59e0b;
+            --red-light: #fee2e2;
+            --red-icon: #ef4444;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --input-bg: #f8fafc;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 16px;
+            touch-action: manipulation;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Top Control Card */
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .textarea-box {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 16px;
+            resize: none;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .btn-save {
+            background: var(--orange);
+            color: white;
+        }
+
+        .btn-clear {
+            background: #334155;
+            color: white;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Main Tabs Styles */
+        .tab-nav {
+            display: flex;
+            background: #eef2f7;
+            padding: 4px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        /* Row List Style */
+        .list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            min-height: 200px;
+        }
+
+        .row-item {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .number-input-field {
+            flex-grow: 1;
+            background: var(--white);
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 16px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .hide-btn {
+            width: 50px;
+            background: var(--red-light);
+            border: none;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--red-icon);
+            font-weight: 700;
+            font-size: 18px;
+            transition: background 0.2s;
+        }
+
+        .hide-btn:hover {
+            background: #fecaca;
+        }
+
+        /* Loading Animation */
+        .loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(244, 247, 250, 0.8);
+            z-index: 50;
+            border-radius: 16px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(92, 103, 242, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+        }
+
+        /* Custom Alert Pop-up */
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(10, 10, 10, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            min-width: 150px;
+        }
+
+        .custom-alert.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Input Controls -->
+        <div class="card">
+            <div class="textarea-box">
+                <textarea id="mainInput" placeholder="Masukkan nomor asli di sini..."
+                    oninput="updateOriginalNumbers()"></textarea>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-clear" onclick="clearInput()">Hapus Semua</button>
+                <button class="btn btn-save" onclick="saveToCloud()">Simpan Ke Cloud</button>
+            </div>
+
+            <!-- 3 Tabs Navigation -->
+            <div class="tab-nav">
+                <div class="tab-btn active" onclick="switchTab(1, this)">8xx</div>
+                <div class="tab-btn" onclick="switchTab(2, this)">62xx</div>
+                <div class="tab-btn" onclick="switchTab(3, this)">VA</div>
+            </div>
+        </div>
+
+        <!-- Dynamic List -->
+        <div class="list-container">
+            <div id="loader" class="loader-overlay">
+                <div class="spinner"></div>
+                <div class="loading-text">Memuat Data...</div>
+            </div>
+            <div id="numberList">
+                <!-- Items injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Element -->
+    <div id="customAlert" class="custom-alert">
+        <div id="alertMsg">Berhasil Disalin!</div>
+    </div>
+
+    <script>
+        const API_URL = "https://kv.sirhuka1.workers.dev/kv?key=dana";
+        const API_KEY = "rhuka123";
+        const mainInput = document.getElementById('mainInput');
+        const listDiv = document.getElementById('numberList');
+        const loader = document.getElementById('loader');
+        const alertEl = document.getElementById('customAlert');
+        const alertMsg = document.getElementById('alertMsg');
+
+        let originalNumbers = [];
+        let hiddenNumbers = new Set();
+        let currentTab = 1;
+
+        window.onload = fetchData;
+
+        function showLoader(show) {
+            loader.style.display = show ? 'flex' : 'none';
+        }
+
+        // Custom Alert Logic
+        function showSuccessAlert(text) {
+            alertMsg.innerText = text + " disalin";
+            alertEl.classList.add('show');
+            setTimeout(() => {
+                alertEl.classList.remove('show');
+            }, 1000);
+        }
+
+        // Copy Function
+        async function copyData(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showSuccessAlert(text);
+            } catch (err) {
+                console.error('Gagal menyalin:', err);
+            }
+        }
+
+        async function fetchData() {
+            showLoader(true);
+            try {
+                const res = await fetch(API_URL, { headers: { 'x-api-key': API_KEY } });
+                const data = await res.json();
+                if (data && data.numbers) {
+                    originalNumbers = data.numbers;
+                    mainInput.value = originalNumbers.join('\n');
+                    renderCurrentTab();
+                }
+            } catch (e) {
+                // Demo fallback
+                originalNumbers = ["85143776903", "81234567890", "08123456789"];
+                mainInput.value = originalNumbers.join('\n');
+                renderCurrentTab();
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        function updateOriginalNumbers() {
+            originalNumbers = mainInput.value.trim().split('\n').map(n => n.trim()).filter(n => n.length > 0);
+            renderCurrentTab();
+        }
+
+        function switchTab(tabId, el) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            renderCurrentTab();
+        }
+
+        function hideNumber(num) {
+            // Hapus dari array originalNumbers
+            originalNumbers = originalNumbers.filter(n => n !== num);
+            // Update textarea sesuai data terbaru
+            mainInput.value = originalNumbers.join('\n');
+            // Refresh tampilan
+            renderCurrentTab();
+        }
+
+        function renderCurrentTab() {
+            listDiv.innerHTML = '';
+            // Selalu gunakan data terbaru dari originalNumbers
+            const visibleNumbers = originalNumbers;
+
+            if (visibleNumbers.length === 0) {
+                listDiv.innerHTML = '<div style="text-align:center; padding: 40px; color: #94a3b8; font-size: 14px;">Tidak ada nomor yang ditampilkan.</div>';
+                return;
+            }
+
+            visibleNumbers.forEach(num => {
+                let textToDisplay = num;
+                if (currentTab === 2) {
+                    textToDisplay = num.startsWith('62') ? num : '62' + num;
+                } else if (currentTab === 3) {
+                    const len = num.length;
+                    if (len <= 10) textToDisplay = "852800" + num;
+                    else if (len === 11) textToDisplay = "85280" + num;
+                    else textToDisplay = "8528" + num;
+                }
+
+                const row = document.createElement('div');
+                row.className = 'row-item';
+                row.style.marginBottom = '10px';
+                row.innerHTML = `
+                    <div class="number-input-field" onclick="copyData('${textToDisplay}')">
+                        ${textToDisplay}
+                    </div>
+                    <button class="hide-btn" onclick="hideNumber('${num}')">
+                        ✕
+                    </button>
+                `;
+                listDiv.appendChild(row);
+            });
+        }
+
+        async function saveToCloud() {
+            const raw = mainInput.value.trim();
+            const nums = raw.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+
+            showLoader(true);
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: { 'x-api-key': API_KEY, 'Content-Type': 'text/plain' },
+                    body: JSON.stringify({ numbers: nums })
+                });
+                if (res.ok) {
+                    originalNumbers = nums;
+                    hiddenNumbers.clear(); // Reset hidden on save so all new numbers show
+                    renderCurrentTab();
+                    alertMsg.innerText = "Data Disimpan!";
+                    alertEl.classList.add('show');
+                    setTimeout(() => alertEl.classList.remove('show'), 1000);
+                }
+            } catch (e) { alert('Gagal menyimpan'); }
+            finally { showLoader(false); }
+        }
+
+        function clearInput() {
+
+            mainInput.value = '';
+            hiddenNumbers.clear();
+            renderCurrentTab();
+
+        }
+    </script>
+</body>
+
+</html>
