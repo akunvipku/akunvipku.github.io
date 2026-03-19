@@ -1091,6 +1091,14 @@
             });
         }
 
+        function showGenericErrorPopup(error) {
+            showPopup({
+                title: 'Terjadi Error',
+                message: error?.message || 'Terjadi kesalahan yang belum dikenali.',
+                helpText: 'Silakan coba lagi. Jika tetap gagal, cek console browser dan network request.'
+            });
+        }
+
         notifyClose.addEventListener('click', hidePopup);
         notifyRetry.addEventListener('click', () => {
             hidePopup();
@@ -1587,6 +1595,9 @@
                 try {
                     return await FP.start({ region });
                 } catch (error) {
+                    if (error?.code === 'INVALID_SECRET_KEY' || error?.code === 'INVALID_API_KEY') {
+                        throw error;
+                    }
                     lastError = error;
                 }
             }
@@ -1697,7 +1708,11 @@
                 $('scan-text').textContent = 'Scan Ulang';
             } catch (error) {
                 console.error('[Error]', error);
-                $('raw-server').textContent = 'Error: ' + (error?.message || 'Unknown error');
+                if (error?.fpPayload) {
+                    $('raw-server').textContent = JSON.stringify(error.fpPayload, null, 2);
+                } else {
+                    $('raw-server').textContent = 'Error: ' + (error?.message || 'Unknown error');
+                }
                 if (error?.code === 'MISSING_PUBLIC_KEY' || error?.code === 'MISSING_SECRET_KEY') {
                     fpPromise = null;
                     showMissingKeyPopup();
@@ -1707,7 +1722,7 @@
                     fpPromise = null;
                     showAdblockPopup(error);
                 } else {
-                    alert('Error: ' + error.message);
+                    showGenericErrorPopup(error);
                 }
                 $('scan-text').textContent = 'Coba Lagi';
             } finally {
