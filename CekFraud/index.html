@@ -238,6 +238,19 @@
             word-break: break-word;
         }
 
+        .meta-item.alert {
+            background: var(--red-dim);
+            border-color: rgba(239, 68, 68, 0.38);
+        }
+
+        .meta-item.alert label {
+            color: #fca5a5;
+        }
+
+        .meta-item.alert span {
+            color: #fecaca;
+        }
+
         .summary-row {
             display: flex;
             flex-wrap: wrap;
@@ -879,6 +892,10 @@
                     <div class="meta-item"><label>Browser</label><span id="m-browser">-</span></div>
                     <div class="meta-item"><label>OS</label><span id="m-os">-</span></div>
                     <div class="meta-item"><label>Incognito</label><span id="m-incognito">-</span></div>
+                    <div class="meta-item alert" id="m-visitor-found-card" style="display:none;">
+                        <label>Visitor Found</label>
+                        <span id="m-first-seen">first_seen_at: -</span>
+                    </div>
                 </div>
                 <div class="summary-row">
                     <div class="summary-pill" id="sum-network">Network belum dipindai</div>
@@ -1063,6 +1080,17 @@
             });
         }
 
+        function showInvalidKeyPopup(error) {
+            const baseUrl = `${window.location.origin}${window.location.pathname}`;
+            const fpCode = error?.fpCode ? `Code: ${error.fpCode}` : '';
+            const fpMessage = error?.fpMessage ? `Message: ${error.fpMessage}` : '';
+            showPopup({
+                title: 'API Key Tidak Valid',
+                message: 'PUBLIC key atau SECRET key salah/tidak dikenali workspace Fingerprint.',
+                helpText: `${fpCode}${fpCode && fpMessage ? '\n' : ''}${fpMessage}${(fpCode || fpMessage) ? '\n\n' : ''}Ganti key di URL lalu reload halaman.\n\nContoh:\n${baseUrl}?public_key=PK_BARU&secret_key=SK_BARU`
+            });
+        }
+
         notifyClose.addEventListener('click', hidePopup);
         notifyRetry.addEventListener('click', () => {
             hidePopup();
@@ -1156,6 +1184,7 @@
         function extractData(serverData) {
             const d = {
                 visitorId: '-', confidence: 0, firstSeenAt: null, lastSeenAt: null,
+                visitorFound: false,
                 ip: '-', city: 'Unknown', country: 'Unknown',
                 browserName: '-', browserVersion: '', os: '-', osVersion: '',
                 incognito: false, bot: false, proxy: false, vpn: false,
@@ -1173,6 +1202,7 @@
                 if (id) {
                     d.visitorId = pickFirst(id.visitorId, id.visitor_id, d.visitorId);
                     d.confidence = pickFirst(id.confidence?.score, d.confidence);
+                    d.visitorFound = id.visitorFound === true || id.visitor_found === true;
                     d.firstSeenAt = pickFirst(id.firstSeenAt?.global, id.firstSeenAt?.subscription, d.firstSeenAt);
                     d.lastSeenAt = pickFirst(id.lastSeenAt?.global, id.lastSeenAt?.subscription, d.lastSeenAt);
                     d.ip = pickFirst(id.ip, d.ip);
@@ -1256,6 +1286,7 @@
                 if (e.identification) {
                     d.visitorId = pickFirst(e.identification.visitor_id, e.identification.visitorId, d.visitorId);
                     d.confidence = pickFirst(e.identification.confidence?.score, d.confidence);
+                    d.visitorFound = e.identification.visitor_found === true || e.identification.visitorFound === true;
                     d.firstSeenAt = pickFirst(e.identification.first_seen_at, e.identification.firstSeenAt, d.firstSeenAt);
                     d.lastSeenAt = pickFirst(e.identification.last_seen_at, e.identification.lastSeenAt, d.lastSeenAt);
                 }
@@ -1495,6 +1526,18 @@
             setText('m-os', os || '-');
             setText('m-incognito', data.incognito ? 'Aktif' : 'Tidak');
 
+            const foundCard = $('m-visitor-found-card');
+            if (foundCard) {
+                if (data.visitorFound) {
+                    const firstSeenText = formatDateTime(data.firstSeenAt) || '-';
+                    setText('m-first-seen', `first_seen_at: ${firstSeenText}`);
+                    foundCard.style.display = 'flex';
+                } else {
+                    foundCard.style.display = 'none';
+                    setText('m-first-seen', 'first_seen_at: -');
+                }
+            }
+
             renderScore(data.suspectScore);
             renderThreats(data);
             renderSignalList(data);
@@ -1581,7 +1624,37 @@
                     if (response.ok) {
                         return await response.json();
                     }
-                    lastError = makeError(`Server ${base} merespon status ${response.status}`, 'SERVER_HTTP_ERROR');
+
+                    let payload = null;
+                    try {
+                        payload = await response.json();
+                    } catch {
+                        payload = null;
+                    }
+
+                    const fpCode = payload?.error?.code || payload?.code || '';
+                    const fpMessage = payload?.error?.message || payload?.message || '';
+
+                    if (response.status === 401 || response.status === 403) {
+                        const err = makeError(
+                            fpMessage || `Autentikasi API gagal (${response.status}).`,
+                            fpCode.includes('secret') ? 'INVALID_SECRET_KEY' : 'INVALID_API_KEY'
+                        );
+                        err.httpStatus = response.status;
+                        err.fpCode = fpCode;
+                        err.fpMessage = fpMessage;
+                        err.fpPayload = payload;
+                        throw err;
+                    }
+
+                    lastError = makeError(
+                        fpMessage || `Server ${base} merespon status ${response.status}`,
+                        'SERVER_HTTP_ERROR'
+                    );
+                    lastError.httpStatus = response.status;
+                    lastError.fpCode = fpCode;
+                    lastError.fpMessage = fpMessage;
+                    lastError.fpPayload = payload;
                 } catch (error) {
                     lastError = error;
                 }
@@ -1628,6 +1701,8 @@
                 if (error?.code === 'MISSING_PUBLIC_KEY' || error?.code === 'MISSING_SECRET_KEY') {
                     fpPromise = null;
                     showMissingKeyPopup();
+                } else if (error?.code === 'INVALID_SECRET_KEY' || error?.code === 'INVALID_API_KEY') {
+                    showInvalidKeyPopup(error);
                 } else if (error?.code === 'ADBLOCK_BLOCKED' || isLikelyBlockerError(error)) {
                     fpPromise = null;
                     showAdblockPopup(error);
