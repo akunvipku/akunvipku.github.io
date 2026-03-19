@@ -1,614 +1,1651 @@
 <!doctype html>
 <html lang="id">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CekFraud — Digital Identity Scanner</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    :root {
-      --bg: #0b0f1a;
-      --surface: #131825;
-      --surface2: #1a2035;
-      --border: #1e2a42;
-      --text: #e2e8f0;
-      --text-dim: #64748b;
-      --accent: #6366f1;
-      --accent-glow: rgba(99, 102, 241, 0.15);
-      --green: #10b981;
-      --green-dim: rgba(16, 185, 129, 0.12);
-      --red: #ef4444;
-      --red-dim: rgba(239, 68, 68, 0.12);
-      --orange: #f59e0b;
-      --orange-dim: rgba(245, 158, 11, 0.12);
-      --radius: 12px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      font-family: 'Inter', system-ui, sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CekFraud - Digital Identity Scanner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg: #0b0f1a;
+            --bg-soft: #10182a;
+            --surface: #131825;
+            --surface-2: #1a2035;
+            --surface-3: #232b43;
+            --border: #1e2a42;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --accent: #6366f1;
+            --accent-2: #818cf8;
+            --accent-glow: rgba(99, 102, 241, 0.15);
+            --green: #10b981;
+            --green-dim: rgba(16, 185, 129, 0.12);
+            --red: #ef4444;
+            --red-dim: rgba(239, 68, 68, 0.12);
+            --orange: #f59e0b;
+            --orange-dim: rgba(245, 158, 11, 0.12);
+            --radius: 16px;
+            --shadow: 0 16px 32px rgba(2, 6, 23, 0.45);
+        }
 
-    /* ─── Layout ─── */
-    .app { max-width: 960px; margin: 0 auto; padding: 32px 20px 120px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* ─── Header ─── */
-    .header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 32px;
-    }
-    .logo { display: flex; align-items: center; gap: 10px; }
-    .logo-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), #818cf8);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .logo h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
-    .logo h1 span { color: var(--accent); }
-    .header-actions { display: flex; align-items: center; gap: 16px; }
-    .dev-badge {
-      font-size: 11px; font-weight: 600; color: var(--text-dim);
-      background: var(--surface2); border: 1px solid var(--border);
-      padding: 4px 10px; border-radius: 6px; cursor: pointer;
-      transition: 0.2s; user-select: none;
-    }
-    .dev-badge.active { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+        body {
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 88% -16%, rgba(99, 102, 241, 0.22), transparent 42%),
+                radial-gradient(circle at -12% 88%, rgba(16, 185, 129, 0.12), transparent 38%),
+                linear-gradient(165deg, var(--bg) 0%, #111827 100%);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    /* ─── Score Hero ─── */
-    .score-hero {
-      display: grid; grid-template-columns: 1fr 200px; gap: 24px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 16px; padding: 28px; margin-bottom: 24px;
-      position: relative; overflow: hidden;
-    }
-    .score-hero::before {
-      content: ''; position: absolute; top: -60px; right: -60px;
-      width: 200px; height: 200px; border-radius: 50%;
-      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .score-info h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 8px; }
-    .visitor-id { font-size: 15px; font-weight: 600; color: var(--accent); word-break: break-all; margin-bottom: 16px; }
-    .meta-row { display: flex; gap: 24px; flex-wrap: wrap; }
-    .meta-item { display: flex; flex-direction: column; gap: 2px; }
-    .meta-item label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); font-weight: 600; }
-    .meta-item span { font-size: 13px; font-weight: 500; }
-    .score-ring {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-    }
-    .ring-wrap { position: relative; width: 120px; height: 120px; }
-    .ring-wrap svg { transform: rotate(-90deg); }
-    .ring-label {
-      position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-    }
-    .ring-label .num { font-size: 32px; font-weight: 800; line-height: 1; }
-    .ring-label .sub { font-size: 10px; color: var(--text-dim); font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+        .app {
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 28px 20px 120px;
+        }
 
-    /* ─── Threat Cards ─── */
-    .section-label {
-      font-size: 12px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 12px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .section-label .dot { width: 6px; height: 6px; border-radius: 50%; }
-    .section-label .dot.red { background: var(--red); box-shadow: 0 0 8px var(--red); }
-    .section-label .dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 26px;
+            gap: 12px;
+        }
 
-    .threat-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px; margin-bottom: 28px;
-    }
-    .threat-card {
-      background: var(--red-dim); border: 1px solid rgba(239, 68, 68, 0.2);
-      border-radius: var(--radius); padding: 16px; cursor: pointer;
-      transition: 0.2s; position: relative; overflow: hidden;
-    }
-    .threat-card:hover { border-color: var(--red); transform: translateY(-2px); }
-    .threat-card .tc-icon {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: rgba(239, 68, 68, 0.15); display: flex;
-      align-items: center; justify-content: center; margin-bottom: 10px;
-      color: var(--red);
-    }
-    .threat-card .tc-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-    .threat-card .tc-status { font-size: 11px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 0.04em; }
-    .threat-card .tc-detail {
-      display: none; margin-top: 12px; padding-top: 12px;
-      border-top: 1px solid rgba(239, 68, 68, 0.15);
-      font-size: 11px; font-family: 'Courier New', monospace;
-      color: var(--text-dim); white-space: pre-wrap; word-break: break-all;
-      max-height: 120px; overflow-y: auto;
-    }
-    .threat-card.expanded .tc-detail { display: block; }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .no-threats {
-      background: var(--green-dim); border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: var(--radius); padding: 24px; text-align: center;
-      margin-bottom: 28px;
-    }
-    .no-threats .nt-icon { color: var(--green); margin-bottom: 8px; }
-    .no-threats p { font-size: 14px; font-weight: 500; color: var(--green); }
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, var(--accent), var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 24px var(--accent-glow);
+            flex-shrink: 0;
+        }
 
-    /* ─── All Signals Compact List ─── */
-    .signal-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 28px; }
-    .signal-row {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 14px; border-radius: 8px;
-      background: var(--surface); border: 1px solid var(--border);
-      font-size: 13px; transition: 0.15s; cursor: pointer;
-    }
-    .signal-row:hover { background: var(--surface2); }
-    .signal-row .sr-icon { width: 16px; height: 16px; color: var(--text-dim); flex-shrink: 0; }
-    .signal-row .sr-name { flex: 1; font-weight: 500; }
-    .signal-row .sr-badge {
-      font-size: 10px; font-weight: 700; padding: 2px 8px;
-      border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em;
-    }
-    .sr-badge.detected { background: var(--red-dim); color: var(--red); }
-    .sr-badge.safe { background: var(--green-dim); color: var(--green); }
-    .signal-row .sr-chevron { width: 14px; color: var(--text-dim); transition: 0.2s; flex-shrink: 0; }
-    .signal-row.open .sr-chevron { transform: rotate(180deg); }
-    .sr-detail {
-      display: none; padding: 8px 14px 12px 42px;
-      font-size: 11px; font-family: 'Courier New', monospace;
-      color: var(--text-dim); white-space: pre-wrap; word-break: break-all;
-      background: var(--surface); border: 1px solid var(--border);
-      border-top: 0; border-radius: 0 0 8px 8px; margin-top: -5px;
-    }
-    .signal-row.open + .sr-detail { display: block; }
+        .logo-text h1 {
+            font-family: 'Sora', 'Segoe UI', Tahoma, sans-serif;
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
 
-    /* ─── Device Info Compact ─── */
-    .device-section {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 20px; margin-bottom: 28px;
-    }
-    .device-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .d-item { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border); }
-    .d-item:last-child { border: 0; }
-    .d-item label { color: var(--text-dim); }
-    .d-item span { font-weight: 500; text-align: right; }
+        .logo-text h1 span {
+            color: var(--accent);
+        }
 
-    /* ─── Dev Panels ─── */
-    .dev-panels {
-      display: none; gap: 16px;
-      grid-template-columns: 1fr 1fr; margin-bottom: 28px;
-    }
-    .dev-panels.show { display: grid; }
-    .dev-box {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 16px;
-    }
-    .dev-box h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); margin-bottom: 10px; }
-    .dev-box pre { font-size: 10px; color: var(--text-dim); overflow: auto; max-height: 250px; white-space: pre-wrap; word-break: break-all; }
+        .logo-sub {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
 
-    /* ─── FAB Button ─── */
-    .fab {
-      position: fixed; bottom: 32px; right: 32px;
-      padding: 14px 28px; border-radius: 999px; border: 0;
-      background: linear-gradient(135deg, var(--accent), #818cf8);
-      color: white; font-weight: 700; font-size: 14px;
-      cursor: pointer; display: flex; align-items: center; gap: 10px;
-      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
-      transition: 0.25s; z-index: 100; font-family: inherit;
-    }
-    .fab:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(99, 102, 241, 0.5); }
-    .fab:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-    .fab svg { width: 18px; height: 18px; }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    .animate-spin { animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+        .dev-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            padding: 6px 11px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+        }
 
-    /* ─── Loading Skeleton ─── */
-    .skeleton {
-      background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%);
-      background-size: 200% 100%; animation: shimmer 1.5s infinite;
-      border-radius: 6px; height: 16px; width: 100px;
-    }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        .dev-badge:hover {
+            border-color: var(--accent);
+            color: var(--accent-2);
+        }
 
-    @media (max-width: 700px) {
-      .score-hero { grid-template-columns: 1fr; }
-      .device-grid { grid-template-columns: 1fr; }
-      .dev-panels.show { grid-template-columns: 1fr; }
-      .threat-grid { grid-template-columns: 1fr 1fr; }
-    }
-  </style>
+        .dev-badge.active {
+            color: var(--accent-2);
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .score-hero {
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 24px;
+            background: linear-gradient(165deg, var(--surface) 0%, var(--surface-2) 100%);
+            border: 1px solid var(--border);
+            border-radius: calc(var(--radius) + 4px);
+            padding: 28px;
+            margin-bottom: 26px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            animation: rise 0.4s ease;
+        }
+
+        .score-hero::before {
+            content: '';
+            position: absolute;
+            right: -80px;
+            top: -80px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .score-info h2 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+        }
+
+        .visitor-id {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent);
+            word-break: break-all;
+            margin-bottom: 12px;
+        }
+
+        .risk-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 14px;
+            border: 1px solid transparent;
+        }
+
+        .risk-pill.safe {
+            color: var(--green);
+            background: var(--green-dim);
+            border-color: rgba(15, 139, 93, 0.3);
+        }
+
+        .risk-pill.warn {
+            color: var(--orange);
+            background: var(--orange-dim);
+            border-color: rgba(204, 122, 0, 0.3);
+        }
+
+        .risk-pill.danger {
+            color: var(--red);
+            background: var(--red-dim);
+            border-color: rgba(196, 61, 47, 0.3);
+        }
+
+        .meta-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: rgba(10, 14, 24, 0.36);
+            padding: 10px;
+            min-height: 62px;
+        }
+
+        .meta-item label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            font-weight: 700;
+        }
+
+        .meta-item span {
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .summary-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .summary-pill {
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(10, 14, 24, 0.45);
+            padding: 6px 10px;
+            color: var(--text-dim);
+        }
+
+        .summary-pill.safe {
+            color: var(--green);
+            background: var(--green-dim);
+            border-color: rgba(15, 139, 93, 0.25);
+        }
+
+        .summary-pill.danger {
+            color: var(--red);
+            background: var(--red-dim);
+            border-color: rgba(196, 61, 47, 0.25);
+        }
+
+        .score-ring {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ring-wrap {
+            position: relative;
+            width: 132px;
+            height: 132px;
+            display: grid;
+            place-items: center;
+        }
+
+        .ring-wrap svg {
+            transform: rotate(-90deg);
+            width: 132px;
+            height: 132px;
+        }
+
+        .ring-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ring-label .num {
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1;
+            font-family: 'Sora', 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        .ring-label .sub {
+            font-size: 10px;
+            color: var(--text-dim);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-top: 4px;
+        }
+
+        .score-level {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            text-align: center;
+        }
+
+        .score-copy {
+            font-size: 12px;
+            color: var(--text-dim);
+            text-align: center;
+            max-width: 170px;
+            line-height: 1.4;
+        }
+        .section-label {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .section-label .dot.red {
+            background: var(--red);
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+        }
+
+        .section-label .dot.green {
+            background: var(--green);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+        }
+
+        .threat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .threat-card {
+            background: linear-gradient(170deg, rgba(239, 68, 68, 0.1) 0%, rgba(19, 24, 37, 0.9) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.24);
+            border-radius: var(--radius);
+            padding: 15px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            outline: none;
+        }
+
+        .threat-card:hover,
+        .threat-card:focus-visible {
+            border-color: var(--red);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(239, 68, 68, 0.16);
+        }
+
+        .threat-card .tc-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: var(--red);
+        }
+
+        .threat-card .tc-name {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .threat-card .tc-status {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--red);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .threat-card .tc-hint {
+            font-size: 11px;
+            margin-top: 8px;
+            color: var(--text-dim);
+        }
+
+        .threat-card .tc-detail {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px dashed rgba(239, 68, 68, 0.25);
+            font-size: 11px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+            color: var(--text-dim);
+            background: rgba(10, 14, 24, 0.65);
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .threat-card.expanded .tc-detail {
+            display: block;
+        }
+
+        .no-threats {
+            background: linear-gradient(160deg, rgba(16, 185, 129, 0.12) 0%, rgba(19, 24, 37, 0.92) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.24);
+            border-radius: var(--radius);
+            padding: 22px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .no-threats .nt-icon {
+            color: var(--green);
+            margin-bottom: 8px;
+        }
+
+        .no-threats p {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .signal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 28px;
+        }
+
+        .signal-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 13px;
+            transition: background 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .signal-row:hover,
+        .signal-row:focus-visible {
+            background: var(--surface-2);
+            border-color: var(--accent);
+        }
+
+        .signal-row .sr-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--text-dim);
+            flex-shrink: 0;
+        }
+
+        .signal-row .sr-name {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .signal-row .sr-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .sr-badge.detected {
+            background: var(--red-dim);
+            color: var(--red);
+        }
+
+        .sr-badge.safe {
+            background: var(--green-dim);
+            color: var(--green);
+        }
+
+        .signal-row .sr-chevron {
+            width: 14px;
+            color: var(--text-dim);
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .signal-row.open+.sr-detail {
+            display: block;
+        }
+
+        .signal-row.open .sr-chevron {
+            transform: rotate(180deg);
+        }
+
+        .sr-detail {
+            display: none;
+            padding: 10px 14px 14px 42px;
+            font-size: 11px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+            color: var(--text-dim);
+            white-space: pre-wrap;
+            word-break: break-word;
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid var(--border);
+            border-top: 0;
+            border-radius: 0 0 10px 10px;
+            margin-top: -6px;
+        }
+
+        .device-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .device-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .d-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .d-item:last-child {
+            border-bottom: 0;
+        }
+
+        .d-item label {
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        .d-item span {
+            font-weight: 700;
+            text-align: right;
+            max-width: 68%;
+            word-break: break-word;
+        }
+
+        .dev-panels {
+            display: none;
+            gap: 16px;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 28px;
+        }
+
+        .dev-panels.show {
+            display: grid;
+        }
+
+        .dev-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+
+        .dev-box h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+        }
+
+        .dev-box pre {
+            font-size: 10px;
+            color: var(--text-dim);
+            overflow: auto;
+            max-height: 250px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 24px;
+            border-radius: 999px;
+            border: 0;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 14px 26px rgba(99, 102, 241, 0.35);
+            transition: 0.25s;
+            z-index: 100;
+            font-family: inherit;
+        }
+
+        .fab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 30px rgba(99, 102, 241, 0.45);
+        }
+
+        .fab:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .fab svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--surface-3) 25%, var(--border) 50%, var(--surface-3) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 6px;
+            height: 16px;
+            width: 100px;
+        }
+
+        .notify-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 8, 20, 0.72);
+            backdrop-filter: blur(2px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 220;
+            padding: 16px;
+        }
+
+        .notify-overlay.show {
+            display: flex;
+        }
+
+        .notify-popup {
+            width: min(520px, 100%);
+            background: linear-gradient(170deg, var(--surface) 0%, var(--surface-2) 100%);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 22px 40px rgba(2, 6, 23, 0.55);
+            padding: 18px;
+        }
+
+        .notify-head {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .notify-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--orange);
+            flex-shrink: 0;
+        }
+
+        .notify-title {
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.3;
+            color: var(--text);
+        }
+
+        .notify-message {
+            font-size: 13px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+        }
+
+        .notify-help {
+            font-size: 12px;
+            color: var(--text-dim);
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 14px;
+            background: rgba(15, 23, 42, 0.35);
+        }
+
+        .notify-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .notify-btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 9px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .notify-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #fff;
+        }
+
+        .notify-btn.ghost {
+            background: var(--surface-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .score-hero {
+                grid-template-columns: 1fr;
+                padding: 22px;
+            }
+
+            .score-ring {
+                padding-top: 6px;
+                border-top: 1px dashed var(--border);
+            }
+
+            .threat-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            .app {
+                padding: 20px 14px 108px;
+            }
+
+            .header {
+                align-items: flex-start;
+            }
+
+            .logo-sub {
+                display: none;
+            }
+
+            .meta-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .device-grid,
+            .dev-panels.show,
+            .threat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .fab {
+                right: 14px;
+                left: 14px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .meta-row {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-text h1 {
+                font-size: 19px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div class="app">
-    <!-- Header -->
-    <div class="header">
-      <div class="logo">
-        <div class="logo-icon"><i data-lucide="shield-check" style="width:20px;height:20px;color:white"></i></div>
-        <h1>Cek<span>Fraud</span></h1>
-      </div>
-      <div class="header-actions">
-        <div class="dev-badge" id="dev-toggle">DEV</div>
-      </div>
-    </div>
-
-    <!-- Score Hero -->
-    <div class="score-hero">
-      <div class="score-info">
-        <h2>Visitor Identification</h2>
-        <div class="visitor-id" id="v-id">Tekan tombol scan untuk mulai</div>
-        <div class="meta-row">
-          <div class="meta-item"><label>IP Address</label><span id="m-ip">-</span></div>
-          <div class="meta-item"><label>Lokasi</label><span id="m-loc">-</span></div>
-          <div class="meta-item"><label>Browser</label><span id="m-browser">-</span></div>
-          <div class="meta-item"><label>OS</label><span id="m-os">-</span></div>
-          <div class="meta-item"><label>Incognito</label><span id="m-incognito">-</span></div>
+    <div class="app">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon"><i data-lucide="shield-check" style="width:20px;height:20px;color:white"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Cek<span>Fraud</span></h1>
+                    <p class="logo-sub">Digital identity risk scanner</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="dev-badge" id="dev-toggle">DEV</div>
+            </div>
         </div>
-      </div>
-      <div class="score-ring">
-        <div class="ring-wrap">
-          <svg width="120" height="120" viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" stroke-width="8"/>
-            <circle id="score-arc" cx="60" cy="60" r="52" fill="none" stroke="var(--green)" stroke-width="8" stroke-linecap="round"
-              stroke-dasharray="326.73" stroke-dashoffset="326.73" style="transition: stroke-dashoffset 1.2s ease, stroke 0.5s;"/>
-          </svg>
-          <div class="ring-label">
-            <div class="num" id="score-num">0</div>
-            <div class="sub">Suspect</div>
-          </div>
+
+        <div class="score-hero" id="score-hero">
+            <div class="score-info">
+                <h2>Visitor Identification</h2>
+                <div class="visitor-id" id="v-id">Tekan tombol scan untuk mulai</div>
+                <div class="risk-pill safe" id="risk-pill">Kondisi aman</div>
+                <div class="meta-row">
+                    <div class="meta-item"><label>IP Address</label><span id="m-ip">-</span></div>
+                    <div class="meta-item"><label>Lokasi</label><span id="m-loc">-</span></div>
+                    <div class="meta-item"><label>Browser</label><span id="m-browser">-</span></div>
+                    <div class="meta-item"><label>OS</label><span id="m-os">-</span></div>
+                    <div class="meta-item"><label>Incognito</label><span id="m-incognito">-</span></div>
+                </div>
+                <div class="summary-row">
+                    <div class="summary-pill" id="sum-network">Network belum dipindai</div>
+                    <div class="summary-pill" id="sum-device">Aktivitas device belum dipindai</div>
+                    <div class="summary-pill" id="sum-privacy">Status privasi belum dipindai</div>
+                </div>
+            </div>
+            <div class="score-ring">
+                <div class="ring-wrap">
+                    <svg viewBox="0 0 132 132">
+                        <circle cx="66" cy="66" r="56" fill="none" stroke="var(--border)" stroke-width="9" />
+                        <circle id="score-arc" cx="66" cy="66" r="56" fill="none" stroke="var(--green)" stroke-width="9"
+                            stroke-linecap="round" stroke-dasharray="351.86" stroke-dashoffset="351.86"
+                            style="transition: stroke-dashoffset 1.2s ease, stroke 0.5s;" />
+                    </svg>
+                    <div class="ring-label">
+                        <div class="num" id="score-num">0</div>
+                        <div class="sub">Suspect Score</div>
+                    </div>
+                </div>
+                <div class="score-level" id="score-level">Risiko Rendah</div>
+                <div class="score-copy" id="score-copy">Perangkat terlihat stabil.</div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Detected Threats -->
-    <div id="threats-section">
-      <div class="section-label"><span class="dot red"></span> ANCAMAN TERDETEKSI <span id="threat-count" style="color:var(--red)">(0)</span></div>
-      <div id="threat-cards" class="threat-grid" style="display:none;"></div>
-      <div id="no-threats" class="no-threats">
-        <div class="nt-icon"><i data-lucide="shield-check" style="width:28px;height:28px"></i></div>
-        <p>Belum ada pemindaian. Tekan "Scan" untuk mulai.</p>
-      </div>
-    </div>
-
-    <!-- All Signals -->
-    <div class="section-label" style="margin-top:4px;"><span class="dot green"></span> SEMUA SINYAL</div>
-    <div id="signal-list" class="signal-list">
-      <div style="text-align:center; padding: 20px; color: var(--text-dim); font-size: 13px;">
-        Belum ada data sinyal
-      </div>
-    </div>
-
-    <!-- Device Info -->
-    <div class="section-label">DETAIL PERANGKAT</div>
-    <div class="device-section">
-      <div class="device-grid">
-        <div>
-          <div class="d-item"><label>Visitor ID</label><span id="d-vid">-</span></div>
-          <div class="d-item"><label>First Seen</label><span id="d-first">-</span></div>
-          <div class="d-item"><label>Last Seen</label><span id="d-last">-</span></div>
-          <div class="d-item"><label>Confidence</label><span id="d-conf">-</span></div>
+        <div id="threats-section">
+            <div class="section-label"><span class="dot red"></span> ANCAMAN TERDETEKSI <span id="threat-count"
+                    style="color:var(--red)">(0)</span></div>
+            <div id="threat-cards" class="threat-grid" style="display:none;"></div>
+            <div id="no-threats" class="no-threats">
+                <div class="nt-icon"><i data-lucide="shield-check" style="width:28px;height:28px"></i></div>
+                <p>Belum ada pemindaian. Tekan tombol scan untuk mulai.</p>
+            </div>
         </div>
-        <div>
-          <div class="d-item"><label>Browser</label><span id="d-browser">-</span></div>
-          <div class="d-item"><label>OS</label><span id="d-os">-</span></div>
-          <div class="d-item"><label>IP Address</label><span id="d-ip">-</span></div>
-          <div class="d-item"><label>Replayed</label><span id="d-replay">-</span></div>
+
+        <div class="section-label" style="margin-top:4px;"><span class="dot green"></span> SEMUA SINYAL</div>
+        <div id="signal-list" class="signal-list">
+            <div style="text-align:center; padding: 20px; color: var(--text-dim); font-size: 13px;">
+                Belum ada data sinyal
+            </div>
         </div>
-      </div>
+
+        <div class="section-label">DETAIL PERANGKAT</div>
+        <div class="device-section">
+            <div class="device-grid">
+                <div>
+                    <div class="d-item"><label>Visitor ID</label><span id="d-vid">-</span></div>
+                    <div class="d-item"><label>First Seen</label><span id="d-first">-</span></div>
+                    <div class="d-item"><label>Last Seen</label><span id="d-last">-</span></div>
+                    <div class="d-item"><label>Confidence</label><span id="d-conf">-</span></div>
+                </div>
+                <div>
+                    <div class="d-item"><label>Browser</label><span id="d-browser">-</span></div>
+                    <div class="d-item"><label>OS</label><span id="d-os">-</span></div>
+                    <div class="d-item"><label>IP Address</label><span id="d-ip">-</span></div>
+                    <div class="d-item"><label>Replayed</label><span id="d-replay">-</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dev-panels" id="dev-panels">
+            <div class="dev-box">
+                <h4>Raw Client Response</h4>
+                <pre id="raw-client">Waiting...</pre>
+            </div>
+            <div class="dev-box">
+                <h4>Raw Server Response</h4>
+                <pre id="raw-server">Waiting...</pre>
+            </div>
+        </div>
     </div>
 
-    <!-- Dev Panels -->
-    <div class="dev-panels" id="dev-panels">
-      <div class="dev-box">
-        <h4>Raw Client Response</h4>
-        <pre id="raw-client">Waiting...</pre>
-      </div>
-      <div class="dev-box">
-        <h4>Raw Server Response</h4>
-        <pre id="raw-server">Waiting...</pre>
-      </div>
+    <button class="fab" id="btn-scan">
+        <i data-lucide="scan" id="scan-icon"></i>
+        <span id="scan-text">Scan Sekarang</span>
+    </button>
+
+    <div class="notify-overlay" id="notify-overlay" aria-hidden="true">
+        <div class="notify-popup" role="dialog" aria-modal="true" aria-labelledby="notify-title">
+            <div class="notify-head">
+                <div class="notify-icon"><i data-lucide="shield-alert" style="width:18px;height:18px"></i></div>
+                <div class="notify-title" id="notify-title">Pemindaian Terblokir</div>
+            </div>
+            <div class="notify-message" id="notify-message"></div>
+            <div class="notify-help" id="notify-help"></div>
+            <div class="notify-actions">
+                <button type="button" class="notify-btn ghost" id="notify-close">Tutup</button>
+                <button type="button" class="notify-btn primary" id="notify-retry">Coba Lagi</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- FAB -->
-  <button class="fab" id="btn-scan">
-    <i data-lucide="scan" id="scan-icon"></i>
-    <span id="scan-text">Scan Sekarang</span>
-  </button>
+    <script type="module">
+        const queryParams = new URLSearchParams(window.location.search);
+        const PUBLIC_API_KEY = (queryParams.get('public_key') || queryParams.get('publicKey') || '').trim();
+        const SECRET_API_KEY = (queryParams.get('secret_key') || queryParams.get('secretKey') || '').trim();
+        const SERVER_BASES = ["https://api.fpjs.io", "https://eu.api.fpjs.io", "https://ap.api.fpjs.io"];
 
-  <script type="module">
-    const PUBLIC_API_KEY = "H9SG1A1njPHp0bVmTDJp";
-    const SECRET_API_KEY = "w2VeU6HKBpo9UcDZOoHw";
-    const SERVER_BASES = ["https://api.fpjs.io","https://eu.api.fpjs.io","https://ap.api.fpjs.io"];
-
-    lucide.createIcons();
-
-    // ─── DOM ───
-    const $ = id => document.getElementById(id);
-    const setText = (id, val) => { const el = $(id); if (el) el.textContent = (val != null && val !== '') ? val : '-'; };
-
-    // Dev toggle
-    $('dev-toggle').addEventListener('click', function() {
-      this.classList.toggle('active');
-      $('dev-panels').classList.toggle('show');
-    });
-
-    // ─── Data Extractor ───
-    function extractData(serverData) {
-      const d = {
-        visitorId: '-', confidence: 0, firstSeenAt: null, lastSeenAt: null,
-        ip: '-', city: 'Unknown', country: 'Unknown',
-        browserName: '-', browserVersion: '', os: '-', osVersion: '',
-        incognito: false, bot: false, proxy: false, vpn: false,
-        tampering: false, virtualMachine: false, privacySettings: false,
-        developerTools: false, suspectScore: 0, replayed: false,
-        rawBot: null, rawProxy: null, rawVpn: null, rawIncognito: null,
-        rawTampering: null, rawVm: null, rawPrivacy: null, rawDevtools: null,
-      };
-      if (!serverData) return d;
-
-      const p = serverData.products;
-      if (p) {
-        // Identification
-        const id = p.identification?.data;
-        if (id) {
-          d.visitorId = id.visitorId || d.visitorId;
-          d.confidence = id.confidence?.score ?? d.confidence;
-          d.firstSeenAt = id.firstSeenAt?.global || null;
-          d.lastSeenAt = id.lastSeenAt?.global || null;
-          d.ip = id.ip || d.ip;
-          d.city = id.ipLocation?.city?.name || d.city;
-          d.country = id.ipLocation?.country?.name || d.country;
-          d.browserName = id.browserDetails?.browserName || d.browserName;
-          d.browserVersion = id.browserDetails?.browserMajorVersion || '';
-          d.os = id.browserDetails?.os || d.os;
-          d.osVersion = id.browserDetails?.osVersion || '';
-        }
-        // Botd
-        const botd = p.botd?.data;
-        if (botd) { d.bot = botd.bot?.result === 'bad'; d.rawBot = botd; }
-        // IP Info
-        const ipD = p.ipInfo?.data;
-        if (ipD) {
-          const v = ipD.v4 || ipD.v6 || {};
-          d.ip = v.address || d.ip;
-          d.city = v.geolocation?.city?.name || d.city;
-          d.country = v.geolocation?.country?.name || d.country;
-        }
-        // Signals
-        const inc = p.incognito?.data; if (inc) { d.incognito = inc.result === true; d.rawIncognito = inc; }
-        const prx = p.proxy?.data; if (prx) { d.proxy = prx.result === true; d.rawProxy = prx; }
-        const vpn = p.vpn?.data; if (vpn) { d.vpn = vpn.result === true; d.rawVpn = vpn; }
-        const tamp = p.tampering?.data; if (tamp) { d.tampering = tamp.result === true; d.rawTampering = tamp; }
-        const vm = p.virtualMachine?.data; if (vm) { d.virtualMachine = vm.result === true; d.rawVm = vm; }
-        const ss = p.suspectScore?.data; if (ss) d.suspectScore = ss.result ?? 0;
-        const priv = p.privacySettings?.data; if (priv) { d.privacySettings = priv.result === true; d.rawPrivacy = priv; }
-        const devt = p.developerTools?.data; if (devt) { d.developerTools = devt.result === true; d.rawDevtools = devt; }
-      }
-
-      // Flat v4 structure fallback
-      if (!p) {
-        const e = serverData;
-        if (e.identification) {
-          d.visitorId = e.identification.visitor_id || e.identification.visitorId || d.visitorId;
-          d.confidence = e.identification.confidence?.score ?? d.confidence;
-        }
-        if (e.visitor_id) d.visitorId = e.visitor_id;
-        if (e.ip_address) d.ip = e.ip_address;
-        if (e.browser_details) {
-          d.browserName = e.browser_details.browser_name || d.browserName;
-          d.browserVersion = e.browser_details.browser_major_version || '';
-          d.os = e.browser_details.os || d.os;
-          d.osVersion = e.browser_details.os_version || '';
-        }
-        if (e.ip_info) {
-          const v = e.ip_info.v4 || e.ip_info.v6 || {};
-          d.ip = v.address || d.ip;
-          d.city = v.geolocation?.city?.name || d.city;
-          d.country = v.geolocation?.country?.name || d.country;
-        }
-        d.bot = e.bot === 'bad'; d.rawBot = { result: e.bot };
-        d.proxy = e.proxy === true; d.rawProxy = { result: e.proxy };
-        d.vpn = e.vpn === true; d.rawVpn = { result: e.vpn };
-        d.incognito = e.incognito === true; d.rawIncognito = { result: e.incognito };
-        d.tampering = typeof e.tampering === 'object' ? e.tampering?.result === true : e.tampering === true;
-        d.rawTampering = e.tampering;
-        d.virtualMachine = e.virtual_machine === true; d.rawVm = { result: e.virtual_machine };
-        d.suspectScore = e.suspect_score ?? 0;
-        d.privacySettings = e.privacy_settings === true; d.rawPrivacy = { result: e.privacy_settings };
-        d.developerTools = e.developer_tools === true; d.rawDevtools = { result: e.developer_tools };
-      }
-      return d;
-    }
-
-    // ─── Signal Config ───
-    const SIGNALS = [
-      { key: 'bot', name: 'Bot', icon: 'bot', rawKey: 'rawBot' },
-      { key: 'proxy', name: 'Proxy', icon: 'server', rawKey: 'rawProxy' },
-      { key: 'vpn', name: 'VPN', icon: 'shield', rawKey: 'rawVpn' },
-      { key: 'incognito', name: 'Incognito', icon: 'glasses', rawKey: 'rawIncognito' },
-      { key: 'tampering', name: 'Tampering', icon: 'wrench', rawKey: 'rawTampering' },
-      { key: 'virtualMachine', name: 'Virtual Machine', icon: 'monitor', rawKey: 'rawVm' },
-      { key: 'privacySettings', name: 'Privacy Settings', icon: 'lock', rawKey: 'rawPrivacy' },
-      { key: 'developerTools', name: 'Developer Tools', icon: 'code-2', rawKey: 'rawDevtools' },
-    ];
-
-    // ─── Render Functions ───
-    function renderScore(score) {
-      const num = $('score-num');
-      const arc = $('score-arc');
-      num.textContent = score;
-      const circumference = 2 * Math.PI * 52; // 326.73
-      const offset = circumference - (score / 100) * circumference;
-      arc.style.strokeDashoffset = offset;
-      arc.style.stroke = score > 50 ? 'var(--red)' : score > 20 ? 'var(--orange)' : 'var(--green)';
-      num.style.color = score > 50 ? 'var(--red)' : score > 20 ? 'var(--orange)' : 'var(--green)';
-    }
-
-    function renderThreats(data) {
-      const detected = SIGNALS.filter(s => data[s.key]);
-      const container = $('threat-cards');
-      const noThreats = $('no-threats');
-      setText('threat-count', `(${detected.length})`);
-
-      if (detected.length === 0) {
-        container.style.display = 'none';
-        noThreats.style.display = 'block';
-        noThreats.innerHTML = `
-          <div class="nt-icon"><i data-lucide="shield-check" style="width:28px;height:28px"></i></div>
-          <p>Tidak ada ancaman terdeteksi — aman!</p>
-        `;
         lucide.createIcons();
-        return;
-      }
 
-      noThreats.style.display = 'none';
-      container.style.display = 'grid';
-      container.innerHTML = '';
+        const $ = id => document.getElementById(id);
+        const setText = (id, val) => {
+            const el = $(id);
+            if (el) el.textContent = (val != null && val !== '') ? val : '-';
+        };
 
-      detected.forEach(sig => {
-        const card = document.createElement('div');
-        card.className = 'threat-card';
-        const rawData = data[sig.rawKey];
-        card.innerHTML = `
-          <div class="tc-icon"><i data-lucide="${sig.icon}" style="width:18px;height:18px"></i></div>
-          <div class="tc-name">${sig.name}</div>
-          <div class="tc-status">⚠ Detected</div>
-          <div class="tc-detail">${JSON.stringify(rawData, null, 2)}</div>
+        const pickFirst = (...values) => values.find(value => value !== undefined && value !== null && value !== '');
+        let fpPromise = null;
+
+        const notifyOverlay = $('notify-overlay');
+        const notifyTitle = $('notify-title');
+        const notifyMessage = $('notify-message');
+        const notifyHelp = $('notify-help');
+        const notifyClose = $('notify-close');
+        const notifyRetry = $('notify-retry');
+
+        function makeError(message, code, cause) {
+            const error = new Error(message);
+            error.code = code;
+            if (cause) error.cause = cause;
+            return error;
+        }
+
+        function flattenErrorMessage(error) {
+            if (!error) return '';
+            let text = '';
+            let cursor = error;
+            let depth = 0;
+            while (cursor && depth < 4) {
+                if (cursor.message) text += ` ${cursor.message}`;
+                else text += ` ${String(cursor)}`;
+                cursor = cursor.cause;
+                depth += 1;
+            }
+            return text.toLowerCase();
+        }
+
+        function isLikelyBlockerError(error) {
+            const text = flattenErrorMessage(error);
+            return text.includes('err_blocked_by_client')
+                || text.includes('err_address_invalid')
+                || text.includes('failed to fetch dynamically imported module')
+                || text.includes('err_name_not_resolved')
+                || text.includes('err_connection_refused')
+                || text.includes('fpjscdn.net')
+                || text.includes('api.fpjs.io');
+        }
+
+        function hidePopup() {
+            notifyOverlay.classList.remove('show');
+            notifyOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function showPopup({ title, message, helpText }) {
+            notifyTitle.textContent = title;
+            notifyMessage.textContent = message;
+            notifyHelp.textContent = helpText;
+            notifyOverlay.classList.add('show');
+            notifyOverlay.setAttribute('aria-hidden', 'false');
+            lucide.createIcons();
+        }
+
+        function showAdblockPopup(error) {
+            const raw = flattenErrorMessage(error).slice(0, 180);
+            showPopup({
+                title: 'Pemindaian Diblokir',
+                message: 'Scan tidak bisa jalan karena request ke Fingerprint terblokir oleh AdBlock/AdGuard atau DNS filter.',
+                helpText: `Matikan sementara AdBlock/AdGuard lalu coba lagi, atau whitelist domain: fpjscdn.net, api.fpjs.io, eu.api.fpjs.io, ap.api.fpjs.io.${raw ? `\n\nDetail: ${raw}` : ''}`
+            });
+        }
+
+        function hasConfiguredKeys() {
+            return Boolean(PUBLIC_API_KEY && SECRET_API_KEY);
+        }
+
+        function showMissingKeyPopup() {
+            const baseUrl = `${window.location.origin}${window.location.pathname}`;
+            showPopup({
+                title: 'API Key Belum Diisi',
+                message: 'PUBLIC key dan SECRET key wajib diisi lewat parameter GET di URL. Sistem tidak menyediakan key default.',
+                helpText: `Tambahkan parameter URL lalu reload halaman.\n\nContoh:\n${baseUrl}?public_key=PK_KAMU&secret_key=SK_KAMU`
+            });
+        }
+
+        notifyClose.addEventListener('click', hidePopup);
+        notifyRetry.addEventListener('click', () => {
+            hidePopup();
+            const scanBtn = $('btn-scan');
+            if (scanBtn && !scanBtn.disabled) scanBtn.click();
+        });
+        notifyOverlay.addEventListener('click', event => {
+            if (event.target === notifyOverlay) hidePopup();
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && notifyOverlay.classList.contains('show')) hidePopup();
+        });
+
+        function toBoolean(value) {
+            return value === true || value === 'true';
+        }
+
+        function formatDateTime(value) {
+            if (value === null || value === undefined || value === '') return '';
+
+            let date;
+            const asNumber = Number(value);
+            if (Number.isFinite(asNumber) && String(value).trim() !== '') {
+                date = new Date(asNumber);
+            } else {
+                date = new Date(value);
+            }
+
+            if (Number.isNaN(date.getTime())) return '';
+            return date.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+        }
+
+        function formatDetail(rawData) {
+            if (rawData === null || rawData === undefined) return 'Tidak ada detail tambahan.';
+            if (typeof rawData === 'string') return rawData;
+            try {
+                return JSON.stringify(rawData, null, 2);
+            } catch {
+                return String(rawData);
+            }
+        }
+
+        function escapeHtml(value) {
+            return value
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;');
+        }
+        function getRiskState(score) {
+            if (score >= 60) {
+                return {
+                    tone: 'danger',
+                    label: 'Risiko Tinggi',
+                    copy: 'Perlu verifikasi manual sebelum proses dilanjutkan.',
+                    pill: 'Waspada tinggi',
+                    color: 'var(--red)'
+                };
+            }
+
+            if (score >= 30) {
+                return {
+                    tone: 'warn',
+                    label: 'Risiko Sedang',
+                    copy: 'Ada sinyal mencurigakan. Pantau aktivitas berikutnya.',
+                    pill: 'Perlu perhatian',
+                    color: 'var(--orange)'
+                };
+            }
+
+            return {
+                tone: 'safe',
+                label: 'Risiko Rendah',
+                copy: 'Belum ada pola mencurigakan yang dominan.',
+                pill: 'Kondisi aman',
+                color: 'var(--green)'
+            };
+        }
+
+        function setSummaryPill(id, text, danger) {
+            const pill = $(id);
+            if (!pill) return;
+            pill.textContent = text;
+            pill.className = `summary-pill ${danger ? 'danger' : 'safe'}`;
+        }
+
+        $('dev-toggle').addEventListener('click', function () {
+            this.classList.toggle('active');
+            $('dev-panels').classList.toggle('show');
+        });
+
+        function extractData(serverData) {
+            const d = {
+                visitorId: '-', confidence: 0, firstSeenAt: null, lastSeenAt: null,
+                ip: '-', city: 'Unknown', country: 'Unknown',
+                browserName: '-', browserVersion: '', os: '-', osVersion: '',
+                incognito: false, bot: false, proxy: false, vpn: false,
+                tampering: false, virtualMachine: false, privacySettings: false,
+                developerTools: false, highActivityDevice: false, suspectScore: 0, replayed: false,
+                rawBot: null, rawProxy: null, rawVpn: null, rawIncognito: null,
+                rawTampering: null, rawVm: null, rawPrivacy: null, rawDevtools: null, rawHighActivity: null,
+            };
+
+            if (!serverData || typeof serverData !== 'object') return d;
+
+            const p = serverData.products;
+            if (p && typeof p === 'object') {
+                const id = p.identification?.data;
+                if (id) {
+                    d.visitorId = pickFirst(id.visitorId, id.visitor_id, d.visitorId);
+                    d.confidence = pickFirst(id.confidence?.score, d.confidence);
+                    d.firstSeenAt = pickFirst(id.firstSeenAt?.global, id.firstSeenAt?.subscription, d.firstSeenAt);
+                    d.lastSeenAt = pickFirst(id.lastSeenAt?.global, id.lastSeenAt?.subscription, d.lastSeenAt);
+                    d.ip = pickFirst(id.ip, d.ip);
+                    d.city = pickFirst(id.ipLocation?.city?.name, id.ipLocation?.cityName, d.city);
+                    d.country = pickFirst(id.ipLocation?.country?.name, id.ipLocation?.countryName, d.country);
+                    d.browserName = pickFirst(id.browserDetails?.browserName, d.browserName);
+                    d.browserVersion = pickFirst(id.browserDetails?.browserMajorVersion, d.browserVersion);
+                    d.os = pickFirst(id.browserDetails?.os, d.os);
+                    d.osVersion = pickFirst(id.browserDetails?.osVersion, d.osVersion);
+                }
+
+                const botd = p.botd?.data;
+                if (botd) {
+                    d.bot = botd.bot?.result === 'bad';
+                    d.rawBot = botd;
+                }
+
+                const ipInfo = p.ipInfo?.data;
+                if (ipInfo) {
+                    const v = ipInfo.v4 || ipInfo.v6 || {};
+                    d.ip = pickFirst(v.address, d.ip);
+                    d.city = pickFirst(v.geolocation?.city?.name, v.geolocation?.city_name, d.city);
+                    d.country = pickFirst(v.geolocation?.country?.name, v.geolocation?.country_name, d.country);
+                }
+
+                const inc = p.incognito?.data;
+                if (inc) {
+                    d.incognito = inc.result === true;
+                    d.rawIncognito = inc;
+                }
+
+                const prx = p.proxy?.data;
+                if (prx) {
+                    d.proxy = prx.result === true;
+                    d.rawProxy = prx;
+                }
+
+                const vpn = p.vpn?.data;
+                if (vpn) {
+                    d.vpn = vpn.result === true;
+                    d.rawVpn = vpn;
+                }
+
+                const tamp = p.tampering?.data;
+                if (tamp) {
+                    d.tampering = tamp.result === true;
+                    d.rawTampering = tamp;
+                }
+
+                const vm = p.virtualMachine?.data;
+                if (vm) {
+                    d.virtualMachine = vm.result === true;
+                    d.rawVm = vm;
+                }
+
+                const ss = p.suspectScore?.data;
+                if (ss) d.suspectScore = Number(ss.result ?? 0);
+
+                const priv = p.privacySettings?.data;
+                if (priv) {
+                    d.privacySettings = priv.result === true;
+                    d.rawPrivacy = priv;
+                }
+
+                const devt = p.developerTools?.data;
+                if (devt) {
+                    d.developerTools = devt.result === true;
+                    d.rawDevtools = devt;
+                }
+
+                const highActivity = p.highActivity?.data || p.highActivityDevice?.data;
+                if (highActivity) {
+                    d.highActivityDevice = highActivity.result === true;
+                    d.rawHighActivity = highActivity;
+                }
+            }
+
+            if (!p) {
+                const e = serverData;
+
+                if (e.identification) {
+                    d.visitorId = pickFirst(e.identification.visitor_id, e.identification.visitorId, d.visitorId);
+                    d.confidence = pickFirst(e.identification.confidence?.score, d.confidence);
+                    d.firstSeenAt = pickFirst(e.identification.first_seen_at, e.identification.firstSeenAt, d.firstSeenAt);
+                    d.lastSeenAt = pickFirst(e.identification.last_seen_at, e.identification.lastSeenAt, d.lastSeenAt);
+                }
+
+                d.visitorId = pickFirst(e.visitor_id, d.visitorId);
+                d.firstSeenAt = pickFirst(e.first_seen_at, d.firstSeenAt);
+                d.lastSeenAt = pickFirst(e.last_seen_at, d.lastSeenAt);
+                d.ip = pickFirst(e.ip_address, d.ip);
+
+                if (e.browser_details) {
+                    d.browserName = pickFirst(e.browser_details.browser_name, d.browserName);
+                    d.browserVersion = pickFirst(e.browser_details.browser_major_version, d.browserVersion);
+                    d.os = pickFirst(e.browser_details.os, d.os);
+                    d.osVersion = pickFirst(e.browser_details.os_version, d.osVersion);
+                }
+
+                if (e.ip_info) {
+                    const v = e.ip_info.v4 || e.ip_info.v6 || {};
+                    d.ip = pickFirst(v.address, d.ip);
+                    d.city = pickFirst(v.geolocation?.city?.name, v.geolocation?.city_name, d.city);
+                    d.country = pickFirst(v.geolocation?.country?.name, v.geolocation?.country_name, d.country);
+                }
+
+                d.bot = e.bot === 'bad';
+                d.rawBot = {
+                    result: e.bot,
+                    type: e.bot_type,
+                    info: e.bot_info || null
+                };
+
+                d.proxy = toBoolean(e.proxy);
+                d.rawProxy = {
+                    result: e.proxy,
+                    confidence: e.proxy_confidence,
+                    details: e.proxy_details || null,
+                    datacenter_result: e.ip_info?.v4?.datacenter_result ?? e.ip_info?.v6?.datacenter_result ?? null
+                };
+
+                d.vpn = toBoolean(e.vpn);
+                d.rawVpn = {
+                    result: e.vpn,
+                    confidence: e.vpn_confidence,
+                    origin_timezone: e.vpn_origin_timezone,
+                    methods: e.vpn_methods
+                };
+
+                d.incognito = toBoolean(e.incognito);
+                d.rawIncognito = {
+                    result: e.incognito,
+                    privacy_settings: e.privacy_settings
+                };
+
+                d.tampering = typeof e.tampering === 'object' ? e.tampering?.result === true : toBoolean(e.tampering);
+                d.rawTampering = {
+                    result: typeof e.tampering === 'object' ? e.tampering?.result : e.tampering,
+                    details: e.tampering_details || (typeof e.tampering === 'object' ? e.tampering : null)
+                };
+
+                d.virtualMachine = toBoolean(e.virtual_machine);
+                d.rawVm = {
+                    result: e.virtual_machine,
+                    device: e.browser_details?.device || null
+                };
+
+                d.privacySettings = toBoolean(e.privacy_settings);
+                d.rawPrivacy = {
+                    result: e.privacy_settings,
+                    incognito: e.incognito,
+                    developer_tools: e.developer_tools
+                };
+
+                d.developerTools = toBoolean(e.developer_tools);
+                d.rawDevtools = {
+                    result: e.developer_tools,
+                    tampering: e.tampering,
+                    bot: e.bot
+                };
+
+                d.highActivityDevice = toBoolean(e.high_activity_device);
+                d.rawHighActivity = {
+                    result: e.high_activity_device,
+                    velocity: e.velocity || null,
+                    suspect_score: e.suspect_score
+                };
+
+                d.suspectScore = Number(e.suspect_score ?? 0);
+                d.replayed = toBoolean(e.replayed);
+            }
+
+            if (typeof serverData.replayed === 'boolean') {
+                d.replayed = serverData.replayed;
+            }
+
+            if (!Number.isFinite(d.suspectScore)) d.suspectScore = 0;
+            return d;
+        }
+
+        const SIGNALS = [
+            { key: 'bot', name: 'Bot', icon: 'bot', rawKey: 'rawBot' },
+            { key: 'proxy', name: 'Proxy', icon: 'server', rawKey: 'rawProxy' },
+            { key: 'vpn', name: 'VPN', icon: 'shield', rawKey: 'rawVpn' },
+            { key: 'incognito', name: 'Incognito', icon: 'glasses', rawKey: 'rawIncognito' },
+            { key: 'tampering', name: 'Tampering', icon: 'wrench', rawKey: 'rawTampering' },
+            { key: 'virtualMachine', name: 'Virtual Machine', icon: 'monitor', rawKey: 'rawVm' },
+            { key: 'privacySettings', name: 'Privacy Settings', icon: 'lock', rawKey: 'rawPrivacy' },
+            { key: 'developerTools', name: 'Developer Tools', icon: 'code-2', rawKey: 'rawDevtools' },
+            { key: 'highActivityDevice', name: 'High Activity Device', icon: 'activity', rawKey: 'rawHighActivity' },
+        ];
+
+        function renderScore(score) {
+            const cleanScore = Math.max(0, Math.min(100, Math.round(Number(score) || 0)));
+            const num = $('score-num');
+            const arc = $('score-arc');
+            const circumference = 2 * Math.PI * 56;
+            const offset = circumference - (cleanScore / 100) * circumference;
+
+            num.textContent = String(cleanScore);
+            arc.style.strokeDashoffset = offset;
+
+            const risk = getRiskState(cleanScore);
+            arc.style.stroke = risk.color;
+            num.style.color = risk.color;
+
+            setText('score-level', risk.label);
+            setText('score-copy', risk.copy);
+
+            const pill = $('risk-pill');
+            if (pill) {
+                pill.textContent = risk.pill;
+                pill.className = `risk-pill ${risk.tone}`;
+            }
+        }
+
+        function bindToggle(element, toggleFn) {
+            element.addEventListener('click', toggleFn);
+            element.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    toggleFn();
+                }
+            });
+        }
+
+        function renderThreats(data) {
+            const detected = SIGNALS.filter(signal => data[signal.key]);
+            const container = $('threat-cards');
+            const noThreats = $('no-threats');
+            setText('threat-count', `(${detected.length})`);
+
+            if (detected.length === 0) {
+                container.style.display = 'none';
+                noThreats.style.display = 'block';
+                noThreats.innerHTML = `
+          <div class="nt-icon"><i data-lucide="shield-check" style="width:28px;height:28px"></i></div>
+          <p>Tidak ada ancaman terdeteksi. Kondisi saat ini aman.</p>
         `;
-        card.addEventListener('click', () => card.classList.toggle('expanded'));
-        container.appendChild(card);
-      });
-      lucide.createIcons();
-    }
+                lucide.createIcons();
+                return;
+            }
 
-    function renderSignalList(data) {
-      const list = $('signal-list');
-      list.innerHTML = '';
+            noThreats.style.display = 'none';
+            container.style.display = 'grid';
+            container.innerHTML = '';
 
-      SIGNALS.forEach(sig => {
-        const detected = data[sig.key];
-        const rawData = data[sig.rawKey];
+            detected.forEach(signal => {
+                const card = document.createElement('div');
+                card.className = 'threat-card';
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
 
-        const row = document.createElement('div');
-        row.className = 'signal-row';
-        row.innerHTML = `
-          <i data-lucide="${sig.icon}" class="sr-icon"></i>
-          <span class="sr-name">${sig.name}</span>
+                const rawData = data[signal.rawKey];
+                const detailText = escapeHtml(formatDetail(rawData));
+
+                card.innerHTML = `
+          <div class="tc-icon"><i data-lucide="${signal.icon}" style="width:18px;height:18px"></i></div>
+          <div class="tc-name">${signal.name}</div>
+          <div class="tc-status">Detected</div>
+          <div class="tc-hint">Klik untuk melihat detail</div>
+          <div class="tc-detail">${detailText}</div>
+        `;
+
+                bindToggle(card, () => card.classList.toggle('expanded'));
+                container.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        function renderSignalList(data) {
+            const list = $('signal-list');
+            list.innerHTML = '';
+
+            SIGNALS.forEach(signal => {
+                const detected = data[signal.key];
+                const rawData = data[signal.rawKey];
+
+                const row = document.createElement('div');
+                row.className = 'signal-row';
+                row.tabIndex = 0;
+                row.setAttribute('role', 'button');
+                row.setAttribute('aria-expanded', 'false');
+
+                row.innerHTML = `
+          <i data-lucide="${signal.icon}" class="sr-icon"></i>
+          <span class="sr-name">${signal.name}</span>
           <span class="sr-badge ${detected ? 'detected' : 'safe'}">${detected ? 'Detected' : 'Safe'}</span>
           <i data-lucide="chevron-down" class="sr-chevron"></i>
         `;
 
-        const detail = document.createElement('div');
-        detail.className = 'sr-detail';
-        detail.textContent = JSON.stringify(rawData, null, 2);
+                const detail = document.createElement('div');
+                detail.className = 'sr-detail';
+                detail.textContent = formatDetail(rawData);
 
-        row.addEventListener('click', () => {
-          row.classList.toggle('open');
-        });
+                const toggle = () => {
+                    row.classList.toggle('open');
+                    row.setAttribute('aria-expanded', row.classList.contains('open') ? 'true' : 'false');
+                };
 
-        list.appendChild(row);
-        list.appendChild(detail);
-      });
-      lucide.createIcons();
-    }
+                bindToggle(row, toggle);
+                list.appendChild(row);
+                list.appendChild(detail);
+            });
 
-    function updateUI(data) {
-      // Hero
-      setText('v-id', data.visitorId);
-      setText('m-ip', data.ip);
-      setText('m-loc', `${data.city}, ${data.country}`);
-      setText('m-browser', `${data.browserName} ${data.browserVersion}`.trim());
-      setText('m-os', `${data.os} ${data.osVersion}`.trim());
-      setText('m-incognito', data.incognito ? 'Ya' : 'Tidak');
-
-      // Score
-      renderScore(data.suspectScore);
-
-      // Threats
-      renderThreats(data);
-
-      // All signals
-      renderSignalList(data);
-
-      // Device details
-      setText('d-vid', data.visitorId);
-      if (data.firstSeenAt) setText('d-first', new Date(data.firstSeenAt).toLocaleString('id-ID'));
-      else setText('d-first', 'Baru saja');
-      if (data.lastSeenAt) setText('d-last', new Date(data.lastSeenAt).toLocaleString('id-ID'));
-      else setText('d-last', '-');
-      const conf = typeof data.confidence === 'number'
-        ? (data.confidence <= 1 ? (data.confidence * 100).toFixed(0) : data.confidence) : 0;
-      setText('d-conf', `${conf}%`);
-      setText('d-browser', `${data.browserName} ${data.browserVersion}`.trim());
-      setText('d-os', `${data.os} ${data.osVersion}`.trim());
-      setText('d-ip', data.ip);
-      setText('d-replay', data.replayed ? 'Yes' : 'No');
-    }
-
-    // ─── API ───
-    async function createAgent() {
-      const FP = await import(`https://fpjscdn.net/v4/${PUBLIC_API_KEY}`);
-      try { return await FP.start(); } catch(e) {}
-      for (const r of ['us','eu','ap']) { try { return await FP.start({region:r}); } catch(e) {} }
-      throw new Error('Agent gagal diinisialisasi');
-    }
-
-    async function fetchServer(eventId) {
-      for (const base of SERVER_BASES) {
-        try {
-          const r = await fetch(`${base}/v4/events/${eventId}`, {
-            headers: { Authorization: `Bearer ${SECRET_API_KEY}`, Accept: 'application/json' }
-          });
-          if (r.ok) return await r.json();
-        } catch(e) {}
-      }
-      throw new Error('Server API tidak merespon');
-    }
-
-    const fpPromise = createAgent();
-
-    $('btn-scan').addEventListener('click', async () => {
-      const btn = $('btn-scan');
-      btn.disabled = true;
-      $('scan-text').textContent = 'Scanning...';
-      $('scan-icon').classList.add('animate-spin');
-
-      try {
-        const fp = await fpPromise;
-        const result = await fp.get();
-        console.log('[Client]', result);
-        $('raw-client').textContent = JSON.stringify(result, null, 2);
-
-        let serverData;
-        try {
-          const eid = result.requestId || result.event_id;
-          serverData = await fetchServer(eid);
-          console.log('[Server]', serverData);
-          $('raw-server').textContent = JSON.stringify(serverData, null, 2);
-        } catch(e) {
-          console.error('[Server Error]', e);
-          $('raw-server').textContent = 'Error: ' + e.message;
-          return;
+            lucide.createIcons();
         }
 
-        const data = extractData(serverData);
-        if (data.visitorId === '-' && result.visitorId) data.visitorId = result.visitorId;
-        console.log('[Extracted]', data);
+        function updateUI(data) {
+            const locationParts = [data.city, data.country].filter(value => value && value !== 'Unknown');
+            const location = locationParts.length ? locationParts.join(', ') : '-';
+            const browser = `${data.browserName} ${data.browserVersion}`.trim();
+            const os = `${data.os} ${data.osVersion}`.trim();
 
-        updateUI(data);
-        $('scan-text').textContent = 'Scan Ulang';
-      } catch (err) {
-        console.error('[Error]', err);
-        alert('Error: ' + err.message);
-        $('scan-text').textContent = 'Coba Lagi';
-      } finally {
-        btn.disabled = false;
-        $('scan-icon').classList.remove('animate-spin');
-      }
-    });
-  </script>
+            setText('v-id', data.visitorId);
+            setText('m-ip', data.ip);
+            setText('m-loc', location);
+            setText('m-browser', browser || '-');
+            setText('m-os', os || '-');
+            setText('m-incognito', data.incognito ? 'Aktif' : 'Tidak');
+
+            renderScore(data.suspectScore);
+            renderThreats(data);
+            renderSignalList(data);
+
+            setSummaryPill('sum-network', data.proxy || data.vpn ? 'Network berisiko' : 'Network normal', data.proxy || data.vpn);
+            setSummaryPill('sum-device', data.highActivityDevice ? 'Aktivitas device tinggi' : 'Aktivitas device normal', data.highActivityDevice);
+            setSummaryPill('sum-privacy', data.incognito || data.developerTools ? 'Privasi diperketat' : 'Privasi standar', data.incognito || data.developerTools);
+
+            setText('d-vid', data.visitorId);
+            setText('d-first', formatDateTime(data.firstSeenAt) || 'Baru saja');
+            setText('d-last', formatDateTime(data.lastSeenAt) || '-');
+
+            const confidenceNumber = Number(data.confidence);
+            const confidencePercent = Number.isFinite(confidenceNumber)
+                ? (confidenceNumber <= 1 ? Math.round(confidenceNumber * 100) : Math.round(confidenceNumber))
+                : 0;
+            setText('d-conf', `${confidencePercent}%`);
+
+            setText('d-browser', browser || '-');
+            setText('d-os', os || '-');
+            setText('d-ip', data.ip);
+            setText('d-replay', data.replayed ? 'Ya' : 'Tidak');
+        }
+
+        async function createAgent() {
+            if (!PUBLIC_API_KEY) {
+                throw makeError('PUBLIC key belum diisi di parameter URL.', 'MISSING_PUBLIC_KEY');
+            }
+            let FP;
+            try {
+                FP = await import(`https://fpjscdn.net/v4/${PUBLIC_API_KEY}`);
+            } catch (error) {
+                if (isLikelyBlockerError(error)) {
+                    throw makeError('Akses ke fpjscdn.net terblokir.', 'ADBLOCK_BLOCKED', error);
+                }
+                throw makeError('Gagal memuat modul Fingerprint.', 'AGENT_IMPORT_FAILED', error);
+            }
+
+            let lastError = null;
+            try {
+                return await FP.start();
+            } catch (error) {
+                lastError = error;
+            }
+
+            for (const region of ['us', 'eu', 'ap']) {
+                try {
+                    return await FP.start({ region });
+                } catch (error) {
+                    lastError = error;
+                }
+            }
+
+            if (isLikelyBlockerError(lastError)) {
+                throw makeError('Koneksi ke layanan Fingerprint terblokir.', 'ADBLOCK_BLOCKED', lastError);
+            }
+            throw makeError('Agent gagal diinisialisasi', 'AGENT_INIT_FAILED', lastError);
+        }
+
+        async function getAgent() {
+            if (!fpPromise) fpPromise = createAgent();
+            try {
+                return await fpPromise;
+            } catch (error) {
+                fpPromise = null;
+                throw error;
+            }
+        }
+
+        async function fetchServer(eventId) {
+            if (!SECRET_API_KEY) {
+                throw makeError('SECRET key belum diisi di parameter URL.', 'MISSING_SECRET_KEY');
+            }
+            let lastError = null;
+            for (const base of SERVER_BASES) {
+                try {
+                    const response = await fetch(`${base}/v4/events/${eventId}`, {
+                        headers: {
+                            Authorization: `Bearer ${SECRET_API_KEY}`,
+                            Accept: 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                    lastError = makeError(`Server ${base} merespon status ${response.status}`, 'SERVER_HTTP_ERROR');
+                } catch (error) {
+                    lastError = error;
+                }
+            }
+
+            if (isLikelyBlockerError(lastError)) {
+                throw makeError('Akses ke server Fingerprint terblokir.', 'ADBLOCK_BLOCKED', lastError);
+            }
+            throw makeError('Server API tidak merespon', 'SERVER_UNREACHABLE', lastError);
+        }
+
+        $('btn-scan').addEventListener('click', async () => {
+            hidePopup();
+            const btn = $('btn-scan');
+            if (!hasConfiguredKeys()) {
+                showMissingKeyPopup();
+                $('scan-text').textContent = 'Isi API Key dulu';
+                return;
+            }
+            btn.disabled = true;
+            $('scan-text').textContent = 'Scanning...';
+            $('scan-icon').classList.add('animate-spin');
+
+            try {
+                const fp = await getAgent();
+                const result = await fp.get();
+                console.log('[Client]', result);
+                $('raw-client').textContent = JSON.stringify(result, null, 2);
+
+                const eventId = result.requestId || result.event_id;
+                const serverData = await fetchServer(eventId);
+                console.log('[Server]', serverData);
+                $('raw-server').textContent = JSON.stringify(serverData, null, 2);
+
+                const data = extractData(serverData);
+                if (data.visitorId === '-' && result.visitorId) data.visitorId = result.visitorId;
+                console.log('[Extracted]', data);
+
+                updateUI(data);
+                $('scan-text').textContent = 'Scan Ulang';
+            } catch (error) {
+                console.error('[Error]', error);
+                $('raw-server').textContent = 'Error: ' + (error?.message || 'Unknown error');
+                if (error?.code === 'MISSING_PUBLIC_KEY' || error?.code === 'MISSING_SECRET_KEY') {
+                    fpPromise = null;
+                    showMissingKeyPopup();
+                } else if (error?.code === 'ADBLOCK_BLOCKED' || isLikelyBlockerError(error)) {
+                    fpPromise = null;
+                    showAdblockPopup(error);
+                } else {
+                    alert('Error: ' + error.message);
+                }
+                $('scan-text').textContent = 'Coba Lagi';
+            } finally {
+                btn.disabled = false;
+                $('scan-icon').classList.remove('animate-spin');
+            }
+        });
+
+        if (!hasConfiguredKeys()) {
+            $('scan-text').textContent = 'Isi API Key dulu';
+            showMissingKeyPopup();
+        }
+    </script>
 </body>
+
 </html>
