@@ -1,762 +1,201 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AkunVIP - Jual Akun Netflix Private Premium 4K HDR Murah & Bergaransi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Website Pindah - Digital Shopee</title>
+  <link rel="icon" href="../public/assets/img/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../public/assets/img/favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fef9f0;
+      --warm: #fff3e3;
+      --card: #ffffff;
+      --ink: #24130e;
+      --body: #4b3528;
+      --muted: #876f60;
+      --line: #ead8c3;
+      --red: #e50914;
+      --orange: #ee4d2d;
+      --shadow: 0 22px 58px rgba(74, 53, 40, .14);
+    }
 
-    <!-- SEO Meta Tags -->
-    <meta name="description"
-        content="Beli Akun Netflix Private Premium 4K HDR termurah di AkunVIP. Hanya Rp 43.800 untuk paket 1 bulan. Akun resmi, profil private, garansi penuh 30 hari. Proses cepat dan aman!">
-    <meta name="keywords"
-        content="netflix premium, netflix premium murah, jual akun netflix, netflix private murah, netflix 4k hdr, akunvip, akun netflix bergaransi">
-    <meta name="author" content="AkunVIP">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://akunvip.id/landing.html">
+    * { box-sizing: border-box; }
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://akunvip.id/landing.html">
-    <meta property="og:title" content="AkunVIP - Akun Netflix Premium 4K HDR Murah">
-    <meta property="og:description"
-        content="Nikmati Netflix Premium 4K Ultra HD dengan harga terbaik. Profil private, tanpa gangguan, garansi penuh 30 hari. Cuma Rp 43.800!">
-    <meta property="og:image" content="https://akunvip.id/assets/og-image-netflix.jpg">
+    html, body { min-height: 100%; }
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://akunvip.id/landing.html">
-    <meta property="twitter:title" content="AkunVIP - Netflix Premium 4K HDR Specialist">
-    <meta property="twitter:description" content="Jual Akun Netflix Private 1 Bulan Murah & Bergaransi. Proses instan!">
-    <meta property="twitter:image" content="https://akunvip.id/assets/og-image-netflix.jpg">
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(238, 77, 45, .16), transparent 28%),
+        radial-gradient(circle at 88% 12%, rgba(229, 9, 20, .12), transparent 30%),
+        linear-gradient(180deg, var(--bg), var(--warm));
+      color: var(--body);
+      font-family: "Nunito", -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.65;
+    }
 
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #e50914;
-            /* Netflix Red */
-            --primary-glow: rgba(229, 9, 20, 0.15);
-            --bg-light: #ffffff;
-            --bg-accent: #f8fafc;
-            --bg-dark: #0f172a;
-            --text-main: #1e1b4b;
-            --text-muted: #64748b;
-            --white: #ffffff;
-            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.05);
-            --radius-lg: 24px;
-            --radius-xl: 32px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    a { color: inherit; text-decoration: none; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
-        }
+    .page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px 16px;
+    }
 
-        body {
-            background-color: var(--bg-light);
-            color: var(--text-main);
-            overflow-x: hidden;
-            line-height: 1.5;
-        }
+    .card {
+      width: min(760px, 100%);
+      position: relative;
+      overflow: hidden;
+      border: 1.5px solid var(--line);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      padding: clamp(26px, 5vw, 46px);
+      text-align: center;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 7px;
+      background: linear-gradient(90deg, var(--orange), var(--red));
+    }
 
-        /* Navbar */
-        nav {
-            padding: 24px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            z-index: 1000;
-        }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+      padding: 12px 16px;
+      border: 1px solid rgba(234, 216, 195, .82);
+      border-radius: 18px;
+      background: #fffaf4;
+    }
 
-        .logo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
+    .logo img {
+      display: block;
+      width: min(260px, 72vw);
+      height: auto;
+    }
 
-        .logo-dot {
-            width: 14px;
-            height: 14px;
-            background: var(--primary);
-            border-radius: 4px;
-            transform: rotate(45deg);
-        }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      padding: 7px 13px;
+      border-radius: 999px;
+      background: #fff0ee;
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
 
-        .nav-links {
-            display: none;
-            gap: 32px;
-        }
+    h1 {
+      margin: 0 0 14px;
+      color: var(--ink);
+      font-family: "Fredoka One", "Nunito", sans-serif;
+      font-size: clamp(38px, 7vw, 64px);
+      line-height: 1.02;
+      letter-spacing: -.02em;
+    }
 
-        @media (min-width: 1024px) {
-            .nav-links {
-                display: flex;
-            }
-        }
+    .red { color: var(--red); }
 
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: var(--transition);
-        }
+    .lede {
+      max-width: 590px;
+      margin: 0 auto 22px;
+      color: var(--body);
+      font-size: clamp(17px, 2vw, 21px);
+      font-weight: 800;
+    }
 
-        .nav-link:hover {
-            color: var(--primary);
-        }
+    .url-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      max-width: 100%;
+      margin: 0 auto 22px;
+      padding: 12px 16px;
+      border: 1.5px dashed #f1b3aa;
+      border-radius: 16px;
+      background: #fff5f3;
+      color: var(--ink);
+      font-size: clamp(18px, 3vw, 25px);
+      font-weight: 950;
+      word-break: break-word;
+    }
 
-        .btn {
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-weight: 700;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-        }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
 
-        .btn-primary {
-            background: var(--primary);
-            color: var(--white);
-            box-shadow: 0 10px 20px var(--primary-glow);
-        }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 12px;
+      color: #fff;
+      background: var(--orange);
+      font-size: 15px;
+      font-weight: 950;
+      box-shadow: 0 10px 24px rgba(238, 77, 45, .24);
+      transition: transform .18s ease, filter .18s ease;
+    }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px var(--primary-glow);
-        }
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.08);
+    }
 
-        .btn-wa {
-            background: #25d366;
-            color: white;
-            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
-        }
+    .note {
+      margin: 24px auto 0;
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
 
-        .btn-wa:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(37, 211, 102, 0.3);
-        }
-
-        .btn-shopee {
-            background: #ee4d2d;
-            color: white;
-            box-shadow: 0 10px 20px rgba(238, 77, 45, 0.2);
-        }
-
-        .btn-shopee:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(238, 77, 45, 0.3);
-        }
-
-        /* Show Shopee button even on mobile */
-        .nav-auth .btn-shopee {
-            display: inline-flex;
-            padding: 10px 16px;
-            font-size: 0.85rem;
-        }
-
-        @media (min-width: 640px) {
-            .nav-auth .btn-shopee {
-                padding: 12px 28px;
-                font-size: 0.95rem;
-            }
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 80px 0 100px;
-            text-align: center;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #fef2f2;
-            color: var(--primary);
-            padding: 8px 20px;
-            border-radius: 100px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            margin-bottom: 32px;
-            border: 1px solid #fee2e2;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -2px;
-        }
-
-        .hero h1 span {
-            color: var(--primary);
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-        }
-
-        .hero p {
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 48px;
-        }
-
-        .hero-btns {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Netflix Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-            margin-top: 60px;
-        }
-
-        @media (min-width: 1024px) {
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .feature-box {
-            background: var(--bg-accent);
-            padding: 32px;
-            border-radius: var(--radius-lg);
-            text-align: left;
-            display: flex;
-            gap: 24px;
-            border: 1px solid #e2e8f0;
-            transition: var(--transition);
-        }
-
-        .feature-box:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .f-num {
-            width: 48px;
-            height: 48px;
-            min-width: 48px;
-            background: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.2rem;
-            box-shadow: var(--shadow-sm);
-            color: var(--text-main);
-        }
-
-        .feature-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-content p {
-            color: var(--text-muted);
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        .device-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .d-tag {
-            background: var(--white);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Important Note Overlay */
-        .important-note {
-            background: #fee2e2;
-            border: 2px solid var(--primary);
-            border-radius: var(--radius-lg);
-            padding: 32px;
-            margin: 60px 0;
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-            text-align: left;
-        }
-
-        .note-icon {
-            font-size: 1.5rem;
-            color: var(--primary);
-            margin-top: 3px;
-        }
-
-        .important-note h4 {
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-weight: 800;
-            font-size: 1.1rem;
-        }
-
-        .important-note p {
-            font-weight: 500;
-            color: #7f1d1d;
-        }
-
-        /* Pricing Card */
-        .pricing-section {
-            padding: 100px 0;
-            text-align: center;
-        }
-
-        .price-card {
-            background: var(--bg-dark);
-            max-width: 500px;
-            margin: 0 auto;
-            border-radius: var(--radius-xl);
-            padding: 60px 40px;
-            color: var(--white);
-            position: relative;
-            box-shadow: 0 40px 60px -15px rgba(15, 23, 42, 0.4);
-        }
-
-        .price-badge {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            padding: 10px 30px;
-            border-radius: 100px;
-            font-weight: 800;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-        }
-
-        .price-card h2 {
-            font-size: 1.8rem;
-            margin-bottom: 40px;
-        }
-
-        .price-card .amount {
-            font-size: 4.5rem;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 40px;
-        }
-
-        .price-card .amount span {
-            font-size: 1.2rem;
-            font-weight: 400;
-            opacity: 0.6;
-        }
-
-        .check-list {
-            list-style: none;
-        }
-
-        .check-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .check-item i {
-            color: #22c55e;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--bg-dark);
-            color: #94a3b8;
-            padding: 100px 0 60px;
-        }
-
-        .footer-logo {
-            color: var(--white);
-            font-size: 1.8rem;
-            font-weight: 800;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        /* Modal Zoom */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(8px);
-            justify-content: center;
-            align-items: center;
-            cursor: zoom-out;
-        }
-
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 12px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: none;
-            /* Instant zoom response */
-            touch-action: none;
-            /* Prevent page scroll during pinch */
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal.active .modal-content {
-            /* Initial scale handled by JS */
-        }
-
-        .testi-card img {
-            cursor: zoom-in;
-        }
-    </style>
+    @media (max-width: 520px) {
+      .page { padding: 18px 12px; }
+      .card { border-radius: 22px; }
+      .actions .btn { width: 100%; }
+    }
+  </style>
 </head>
-
 <body>
-
-    <div class="container">
-        <!-- Navbar -->
-        <nav>
-            <a href="#" class="logo">
-                <div class="logo-dot"></div>AkunVIP
-            </a>
-            <div class="nav-links">
-                <a href="#fitur" class="nav-link">Fitur Akun</a>
-                <a href="#testimoni" class="nav-link">Testimoni</a>
-                <a href="https://s.shopee.co.id/10lxSFyaRP" target="_blank" class="nav-link">Order Shopee</a>
-                <a href="https://wa.me/62895711445566?text=Hai%20Sirhuka%2C%20saya%20ingin%20memesan%20Netflix%20Premium"
-                    target="_blank" class="nav-link">Hubungi Kami</a>
-            </div>
-            <div class="nav-auth">
-                <a href="https://s.shopee.co.id/10lxSFyaRP" target="_blank" class="btn btn-shopee"><i
-                        class="fas fa-shopping-bag"></i> Beli di Shopee</a>
-            </div>
-        </nav>
-
-        <!-- Hero -->
-        <section class="hero">
-            <div class="badge">PRIVATE PROFILE • AKUN EKSKLUSIF</div>
-            <h1>Netflix Private<br><span>Akun Premium 4K HDR</span></h1>
-            <p>Dapatkan pengalaman menonton terbaik dengan AkunVIP. Akun resmi, garansi aman, dan profil pribadi untuk
-                kenyamanan maksimal Anda.</p>
-
-            <div class="hero-btns">
-                <a href="https://s.shopee.co.id/10lxSFyaRP" target="_blank" class="btn btn-shopee"
-                    style="padding: 18px 48px; font-size: 1.2rem;">Beli di Shopee <i
-                        class="fas fa-shopping-bag"></i></a>
-                <a href="https://wa.me/62895711445566?text=Hai%20Sirhuka%2C%20saya%20ingin%20memesan%20Netflix%20Premium"
-                    target="_blank" class="btn btn-wa" style="padding: 18px 48px; font-size: 1.2rem;">Pesan via WA <i
-                        class="fab fa-whatsapp"></i></a>
-            </div>
-
-            <!-- Features -->
-            <div class="features-grid" id="fitur">
-                <div class="feature-box" style="background: #fff8e1;">
-                    <div class="f-num">1</div>
-                    <div class="feature-content">
-                        <h3><i class="fas fa-check-square" style="color: #4caf50;"></i> Bisa digunakan di semua
-                            perangkat</h3>
-                        <p>Tonton film favorit Anda dimanapun dan kapanpun tanpa batas perangkat.</p>
-                        <div class="device-tags">
-                            <span class="d-tag"><i class="fas fa-tv"></i> Smart TV</span>
-                            <span class="d-tag"><i class="fas fa-mobile-alt"></i> HP</span>
-                            <span class="d-tag"><i class="fas fa-laptop"></i> Laptop</span>
-                            <span class="d-tag"><i class="fas fa-desktop"></i> PC</span>
-                            <span class="d-tag"><i class="fas fa-gamepad"></i> PS</span>
-                            <span class="d-tag"><i class="fas fa-tablet-alt"></i> Tablet</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="feature-box" style="background: #fff1f0;">
-                    <div class="f-num">2</div>
-                    <div class="feature-content">
-                        <h3><i class="fas fa-ban" style="color: #f5222d;"></i> Tanpa ribet gonta-ganti akun</h3>
-                        <p>Cukup satu kali login, tanpa gonta-ganti akun, Anda bisa terus menonton tanpa perlu login
-                            ulang. Lebih efisien dan tidak
-                            mengganggu kenyamanan.</p>
-                    </div>
-                </div>
-
-                <div class="feature-box" style="background: #f0f5ff;">
-                    <div class="f-num">3</div>
-                    <div class="feature-content">
-                        <h3><i class="fas fa-user-lock" style="color: #2f54eb;"></i> Private profile khusus untuk Anda
-                        </h3>
-                        <p>1 user = 1 profil pribadi. Tanpa household, tanpa berbagi dengan orang lain. Histori tontonan
-                            Anda tetap privat!</p>
-                    </div>
-                </div>
-
-                <div class="feature-box" style="background: #e6fffb;">
-                    <div class="f-num">4</div>
-                    <div class="feature-content">
-                        <h3><i class="fas fa-gem" style="color: #13c2c2;"></i> Kualitas premium hingga 4K Ultra HD</h3>
-                        <p>Nikmati pengalaman menonton terbaik dengan kualitas gambar tajam dan jernih hingga resolusi
-                            4K untuk detail maksimal.</p>
-                    </div>
-                </div>
-
-                <div class="feature-box" style="background: #fff7e6; grid-column: 1 / -1;">
-                    <div class="f-num">5</div>
-                    <div class="feature-content">
-                        <h3><i class="fas fa-th-large" style="color: #fa8c16;"></i> Login hingga 2 perangkat</h3>
-                        <p>Fleksibilitas login di 2 perangkat berbeda sesuai kebutuhan Anda. Praktis untuk
-                            berpindah-pindah antar device.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Important Note -->
-            <div class="important-note">
-                <i class="fas fa-exclamation-triangle note-icon"></i>
-                <div>
-                    <h4>PENTING! Perhatikan ini:</h4>
-                    <p>Meskipun bisa login di 2 perangkat, <b>tidak boleh streaming bersamaan</b>. Harus bergantian ya.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Testimonials Section -->
-        <section id="testimoni" style="padding: 100px 0;">
-            <div class="section-header" style="text-align: center; margin-bottom: 60px;">
-                <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 16px;">Apa Kata <span>Mereka?</span></h2>
-                <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Puluhan ribu
-                    pelanggan telah menikmati layanan Netflix premium dari AkunVIP. Berikut bukti kepuasan mereka.</p>
-            </div>
-
-            <div class="testi-grid"
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px;">
-                <div class="testi-card" onclick="openModal(this)"
-                    style="border-radius: var(--radius-lg); overflow: hidden; border: 1px solid #e2e8f0; box-shadow: var(--shadow-sm); transition: var(--transition);">
-                    <img src="https://img.sp.mms.shopee.sg/sg-11134209-8260z-mk8hv8824rus03" alt="Testimoni AkunVIP"
-                        style="width: 100%; display: block;">
-                </div>
-                <div class="testi-card" onclick="openModal(this)"
-                    style="border-radius: var(--radius-lg); overflow: hidden; border: 1px solid #e2e8f0; box-shadow: var(--shadow-sm); transition: var(--transition);">
-                    <img src="https://img.sp.mms.shopee.sg/sg-11134209-8262y-mk8husdo7hfk72" alt="Testimoni AkunVIP"
-                        style="width: 100%; display: block;">
-                </div>
-                <div class="testi-card" onclick="openModal(this)"
-                    style="border-radius: var(--radius-lg); overflow: hidden; border: 1px solid #e2e8f0; box-shadow: var(--shadow-sm); transition: var(--transition);">
-                    <img src="https://img.sp.mms.shopee.sg/sg-11134209-8262e-mk8hwr7lex3989" alt="Testimoni AkunVIP"
-                        style="width: 100%; display: block;">
-                </div>
-                <div class="testi-card" onclick="openModal(this)"
-                    style="border-radius: var(--radius-lg); overflow: hidden; border: 1px solid #e2e8f0; box-shadow: var(--shadow-sm); transition: var(--transition);">
-                    <img src="https://img.sp.mms.shopee.sg/sg-11134209-82601-mk8hxbcs83k0b4" alt="Testimoni AkunVIP"
-                        style="width: 100%; display: block;">
-                </div>
-            </div>
-
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="https://s.shopee.co.id/10lxSFyaRP" target="_blank"
-                    style="color: var(--primary); font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1.2rem;">
-                    lihat selengkapnya di shopee <i class="fas fa-external-link-alt"></i>
-                </a>
-            </div>
-
-            <style>
-                .testi-card:hover {
-                    transform: scale(1.02);
-                    box-shadow: var(--shadow-lg);
-                    border-color: var(--primary);
-                }
-            </style>
-        </section>
-
-        <!-- Pricing Section -->
-        <section class="pricing-section" id="harga">
-            <div class="price-card">
-                <div class="price-badge">BEST VALUE</div>
-                <h2>Paket Premium 1 Bulan</h2>
-                <div class="amount">Rp 43.800 <span>/ akun</span></div>
-
-                <ul class="check-list" style="max-width: 300px; margin: 0 auto 40px; text-align: left;">
-                    <li class="check-item"><i class="fas fa-check"></i> Private Profile & PIN</li>
-                    <li class="check-item"><i class="fas fa-check"></i> Ultra HD 4K Quality</li>
-                    <li class="check-item"><i class="fas fa-check"></i> Garansi Penuh 30 Hari</li>
-                    <li class="check-item"><i class="fas fa-check"></i> 100% Legal & Aman</li>
-                </ul>
-
-                <a href="https://wa.me/62895711445566?text=Hai%20Sirhuka%2C%20saya%20ingin%20memesan%20Netflix%20Premium"
-                    target="_blank" class="btn btn-wa"
-                    style="width: 100%; border-radius: 16px; padding: 20px; font-size: 1.2rem; margin-bottom: 15px;">Pesan
-                    Sekarang via WA</a>
-                <a href="https://s.shopee.co.id/10lxSFyaRP" target="_blank" class="btn btn-shopee"
-                    style="width: 100%; border-radius: 16px; padding: 20px; font-size: 1.2rem;">Beli Aman via Shopee</a>
-            </div>
-        </section>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container" style="text-align: center;">
-            <a href="#" class="footer-logo">
-                <div class="logo-dot"></div>AkunVIP
-            </a>
-            <p style="max-width: 500px; margin: 0 auto 40px;">Penyedia layanan produk digital premium terpercaya di
-                Indonesia. Transaksi cepat, aman, dan bergaransi.</p>
-            <div style="padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05);">
-                &copy; 2026 AkunVIP • Netflix Premium Specialist
-            </div>
-        </div>
-    </footer>
-
-    <!-- Image Modal -->
-    <div id="imageModal" class="modal" onclick="closeModal()">
-        <img class="modal-content" id="imgFull">
-    </div>
-
-    <script>
-        let scale = 1;
-        let lastScale = 1;
-        let startDist = 0;
-        let posX = 0;
-        let posY = 0;
-        let startX = 0;
-        let startY = 0;
-        let isDragging = false;
-
-        const modal = document.getElementById('imageModal');
-        const fullImg = document.getElementById('imgFull');
-
-        fullImg.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 2) {
-                startDist = Math.hypot(
-                    e.touches[0].pageX - e.touches[1].pageX,
-                    e.touches[0].pageY - e.touches[1].pageY
-                );
-            } else if (e.touches.length === 1 && scale > 1) {
-                isDragging = true;
-                startX = e.touches[0].pageX - posX;
-                startY = e.touches[0].pageY - posY;
-            }
-        });
-
-        fullImg.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 2 && startDist > 0) {
-                e.preventDefault();
-                const currentDist = Math.hypot(
-                    e.touches[0].pageX - e.touches[1].pageX,
-                    e.touches[0].pageY - e.touches[1].pageY
-                );
-                scale = Math.min(Math.max(1, lastScale * (currentDist / startDist)), 4);
-                updateTransform();
-            } else if (e.touches.length === 1 && isDragging) {
-                e.preventDefault();
-                posX = e.touches[0].pageX - startX;
-                posY = e.touches[0].pageY - startY;
-                updateTransform();
-            }
-        });
-
-        fullImg.addEventListener('touchend', (e) => {
-            if (e.touches.length < 2) {
-                lastScale = scale;
-                startDist = 0;
-            }
-            if (e.touches.length === 0) {
-                isDragging = false;
-            }
-        });
-
-        // Prevention for body scroll when zooming/panning
-        fullImg.addEventListener('wheel', (e) => {
-            if (e.ctrlKey) {
-                e.preventDefault();
-                const delta = e.deltaY > 0 ? 0.9 : 1.1;
-                scale = Math.min(Math.max(1, scale * delta), 4);
-                updateTransform();
-            }
-        }, { passive: false });
-
-        function updateTransform() {
-            fullImg.style.transform = `translate(${posX}px, ${posY}px) scale(${scale})`;
-        }
-
-        function openModal(card) {
-            const clickedImg = card.querySelector('img');
-            fullImg.src = clickedImg.src;
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-
-            // Reset state
-            scale = 1;
-            lastScale = 1;
-            posX = 0;
-            posY = 0;
-            updateTransform();
-        }
-
-        function closeModal() {
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Stop propagation only when clicking the image to allow closing when clicking background
-        fullImg.onclick = (e) => e.stopPropagation();
-    </script>
+  <main class="page">
+    <section class="card" aria-labelledby="title">
+      <a class="logo" href="https://digitalshopee.com/" aria-label="Buka Digital Shopee">
+        <img src="../public/assets/img/digital-shopee-logo.png" alt="Digital Shopee">
+      </a>
+      <div class="eyebrow">Informasi Website</div>
+      <h1 id="title">Website sudah <span class="red">pindah</span></h1>
+      <p class="lede">Halaman akun VIP dan informasi produk sekarang tersedia di alamat resmi Digital Shopee.</p>
+      <div class="url-box" aria-label="Alamat website baru">digitalshopee.com</div>
+      <div class="actions">
+        <a class="btn" href="https://digitalshopee.com/">Buka Digital Shopee</a>
+      </div>
+      <p class="note">Silakan simpan alamat baru agar tidak salah membuka halaman lama.</p>
+    </section>
+  </main>
 </body>
-
 </html>
