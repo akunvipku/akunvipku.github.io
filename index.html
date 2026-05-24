@@ -69,23 +69,6 @@
       background: linear-gradient(90deg, var(--orange), var(--red));
     }
 
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 22px;
-      padding: 12px 16px;
-      border: 1px solid rgba(234, 216, 195, .82);
-      border-radius: 18px;
-      background: #fffaf4;
-    }
-
-    .logo img {
-      display: block;
-      width: min(260px, 72vw);
-      height: auto;
-    }
-
     .eyebrow {
       display: inline-flex;
       align-items: center;
@@ -143,6 +126,35 @@
       box-shadow: 0 10px 24px rgba(238, 77, 45, .14);
     }
 
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 12px;
+      color: #fff;
+      background: var(--orange);
+      font-size: 15px;
+      font-weight: 950;
+      box-shadow: 0 10px 24px rgba(238, 77, 45, .24);
+      transition: transform .18s ease, filter .18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      filter: saturate(1.08);
+    }
+
     .note {
       margin: 24px auto 0;
       max-width: 520px;
@@ -154,19 +166,20 @@
     @media (max-width: 520px) {
       .page { padding: 18px 12px; }
       .card { border-radius: 22px; }
+      .actions .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
   <main class="page">
     <section class="card" aria-labelledby="title">
-      <a class="logo" href="https://digitalshopee.com/" aria-label="Buka Digital Shopee">
-        <img src="../public/assets/img/digital-shopee-logo.png" alt="Digital Shopee">
-      </a>
       <div class="eyebrow">Informasi Website</div>
       <h1 id="title">Website sudah <span class="red">pindah</span></h1>
       <p class="lede">Halaman akun VIP dan informasi produk sekarang tersedia di alamat resmi Digital Shopee.</p>
       <a class="url-box" href="https://digitalshopee.com/" aria-label="Buka website baru Digital Shopee">digitalshopee.com</a>
+      <div class="actions">
+        <a class="btn" href="https://digitalshopee.com/">Buka Digital Shopee</a>
+      </div>
       <p class="note">Silakan simpan alamat baru agar tidak salah membuka halaman lama.</p>
     </section>
   </main>
