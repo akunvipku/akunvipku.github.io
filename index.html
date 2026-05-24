@@ -137,33 +137,10 @@
       word-break: break-word;
     }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 12px 20px;
-      border: 0;
-      border-radius: 12px;
-      color: #fff;
-      background: var(--orange);
-      font-size: 15px;
-      font-weight: 950;
-      box-shadow: 0 10px 24px rgba(238, 77, 45, .24);
-      transition: transform .18s ease, filter .18s ease;
-    }
-
-    .btn:hover {
+    .url-box:hover {
       transform: translateY(-2px);
-      filter: saturate(1.08);
+      border-color: rgba(238, 77, 45, .74);
+      box-shadow: 0 10px 24px rgba(238, 77, 45, .14);
     }
 
     .note {
@@ -177,7 +154,6 @@
     @media (max-width: 520px) {
       .page { padding: 18px 12px; }
       .card { border-radius: 22px; }
-      .actions .btn { width: 100%; }
     }
   </style>
 </head>
@@ -190,10 +166,7 @@
       <div class="eyebrow">Informasi Website</div>
       <h1 id="title">Website sudah <span class="red">pindah</span></h1>
       <p class="lede">Halaman akun VIP dan informasi produk sekarang tersedia di alamat resmi Digital Shopee.</p>
-      <div class="url-box" aria-label="Alamat website baru">digitalshopee.com</div>
-      <div class="actions">
-        <a class="btn" href="https://digitalshopee.com/">Buka Digital Shopee</a>
-      </div>
+      <a class="url-box" href="https://digitalshopee.com/" aria-label="Buka website baru Digital Shopee">digitalshopee.com</a>
       <p class="note">Silakan simpan alamat baru agar tidak salah membuka halaman lama.</p>
     </section>
   </main>
